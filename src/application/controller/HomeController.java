@@ -104,7 +104,7 @@ public class HomeController implements Initializable{
 			Scene scene = new Scene(root);
 			stats.setScene(scene);
 			stats.setTitle("JTrash - Le tue Statistiche");
-			stats.getIcons().add(new Image("file:resource/varie/icon16.png"));
+			//stats.getIcons().add(new Image("file:resource/varie/icon16.png"));
 			stats.show();
 		} catch(Exception e) {
 			e.printStackTrace();

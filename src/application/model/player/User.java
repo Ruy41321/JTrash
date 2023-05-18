@@ -331,14 +331,14 @@ public class User extends Player {
 	 **/
 	public static boolean signup(String nick, String pass) {
 		try {
-			File file = new File("src/application/model/player/db/" + nick + ".json");
+			File file = new File("bin/application/model/player/db/" + nick + ".json");
 			// if the file already exist means the nick is already taken
 			if (file.exists())
 				System.out.println("Nick non disponibile");
 			else if (file.createNewFile()) { // creating the file
 				// setting to default the Users statistics
 				int perse = 0, vinte = 0, pTot = 0, livello = 0;
-				String avatar = "resource/varie/avatar.png";
+				String avatar = "res/varie/avatar.png";
 
 				// Initializing the Objects to write on files
 				BufferedWriter bw = new BufferedWriter(new FileWriter(file));
@@ -368,7 +368,7 @@ public class User extends Player {
 	 */
 	public static User login(String nick, String pass) {
 		try {
-			File file = new File("src/application/model/player/db/" + nick + ".json");
+			File file = new File("bin/application/model/player/db/" + nick + ".json");
 			// I go over only if the file exist
 			if (!file.exists())
 				System.out.println("Nick non registrato");

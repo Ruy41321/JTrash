@@ -17,7 +17,7 @@
    <children>
       <ImageView fitHeight="210.0" fitWidth="315.0" layoutY="120.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-color: #1d1d1d;">
          <image>
-            <Image url="@../../../resource/varie/assi.png" />
+            <Image url="@../../../res/varie/assi.png" />
          </image>
       </ImageView>
       <Label layoutX="541.0" layoutY="79.0" text="Accedi" visible="false">
@@ -89,7 +89,7 @@
       </Label>
       <ImageView fitHeight="128.0" fitWidth="121.0" layoutX="524.0" layoutY="31.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../resource/varie/locker_96.png" />
+            <Image url="@../../../res/varie/locker_96.png" />
          </image>
       </ImageView>
    </children>

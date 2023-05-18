@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
@@ -10,16 +10,17 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.paint.LinearGradient?>
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.HomeController">
-  <children>
-      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="60.0" minWidth="600.0" prefWidth="500.0" style="-fx-background-color: linear-gradient(to bottom left, #009933 1%, #003300 100%);" VBox.vgrow="NEVER">
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="750.0" minWidth="1100.0" prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.HomeController">
+   <top>
+      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="60.0" minWidth="600.0" style="-fx-background-color: linear-gradient(to bottom left, #009933 1%, #003300 100%);" BorderPane.alignment="CENTER">
          <children>
             <ImageView fitHeight="60.0" fitWidth="73.0" layoutX="-3.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -90,7 +91,7 @@
                </textFill>
             </Label>
             <MenuButton alignment="CENTER" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" layoutX="528.0" layoutY="7.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" style="-fx-background-color: white;" AnchorPane.rightAnchor="8.0">
-               <items>
+              <items>
                   <MenuItem mnemonicParsing="false" onAction="#changeAvatar">
                      <graphic>
                         <Button graphicTextGap="0.0" mnemonicParsing="false" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Cambia Avatar">
@@ -110,7 +111,7 @@
                         </Button>
                      </graphic>
                   </MenuItem>
-               </items>
+              </items>
                <graphic>
                   <ImageView fx:id="avatar" fitHeight="32.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" />
                </graphic>
@@ -223,81 +224,44 @@
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane minHeight="-Infinity" minWidth="-Infinity" styleClass="background" stylesheets="@css/Login.css" VBox.vgrow="ALWAYS">
+   </top>
+   <bottom>
+      <AnchorPane minHeight="60.0" prefHeight="89.0" prefWidth="1241.0" style="-fx-background-color: linear-gradient(to bottom left, #009933 1%, #003300 100%);" BorderPane.alignment="CENTER">
          <children>
-            <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <HBox AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <children>
-                  <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                  <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                  <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-               </children>
-            </VBox>
-            <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <AnchorPane layoutX="351.0" layoutY="69.0" prefHeight="314.0" prefWidth="498.0">
+                  <HBox HBox.hgrow="NEVER" />
+                  <HBox fx:id="footer" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="85.0" prefWidth="600.0" spacing="60.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <CheckBox layoutX="39.0" layoutY="23.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0">
-                           <graphic>
-                              <ImageView fitHeight="102.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../res/varie/1.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </CheckBox>
-                        <CheckBox layoutX="199.0" layoutY="23.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0">
-                           <graphic>
-                              <ImageView fitHeight="102.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../res/varie/2.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </CheckBox>
-                        <CheckBox layoutX="359.0" layoutY="23.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0">
-                           <graphic>
-                              <ImageView fitHeight="102.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../res/varie/3.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </CheckBox>
-                        <Button graphicTextGap="0.0" layoutX="187.0" layoutY="237.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 ); -fx-text-fill: black; -fx-font-family: arial;" text="Gioca">
+                        <Button graphicTextGap="0.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Abbandona" HBox.hgrow="NEVER">
+                           <font>
+                              <Font name="Arial Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        <Button graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Trash" HBox.hgrow="NEVER">
+                           <font>
+                              <Font name="Arial Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        <Button graphicTextGap="0.0" layoutX="134.0" layoutY="10.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Pesca" HBox.hgrow="NEVER">
                            <font>
                               <Font name="Arial Bold" size="12.0" />
                            </font>
                         </Button>
                      </children>
-                  </AnchorPane>
-               </children>
-            </AnchorPane>
-         </children>
-      </AnchorPane>
-      <HBox style="-fx-background-color: linear-gradient(to bottom left, #009933 1%, #003300 100%);" VBox.vgrow="NEVER">
-         <children>
-            <HBox HBox.hgrow="NEVER" />
-            <HBox fx:id="footer" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="85.0" prefWidth="600.0" spacing="60.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <Button graphicTextGap="0.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Abbandona" HBox.hgrow="NEVER">
-                     <font>
-                        <Font name="Arial Bold" size="12.0" />
-                     </font>
-                  </Button>
-                  <Button graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Trash" HBox.hgrow="NEVER">
-                     <font>
-                        <Font name="Arial Bold" size="12.0" />
-                     </font>
-                  </Button>
-                  <Button graphicTextGap="0.0" layoutX="134.0" layoutY="10.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Pesca" HBox.hgrow="NEVER">
-                     <font>
-                        <Font name="Arial Bold" size="12.0" />
-                     </font>
-                  </Button>
+                  </HBox>
+                  <HBox HBox.hgrow="NEVER" />
                </children>
             </HBox>
-            <HBox HBox.hgrow="NEVER" />
          </children>
-      </HBox>
-  </children>
-</VBox>
+      </AnchorPane>
+   </bottom>
+   <center>
+      <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" stylesheets="@css/Login.css" BorderPane.alignment="CENTER">
+         <styleClass>
+            <String fx:value="background" />
+            <String fx:value="background" />
+         </styleClass>
+      </AnchorPane>
+   </center>
+</BorderPane>

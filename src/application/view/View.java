@@ -1,6 +1,7 @@
 package application.view;
 
 import java.io.IOException;
+import java.net.URL;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +23,7 @@ public class View extends Application {
 	public void start(Stage primaryStage) {
 		stg = primaryStage;
 		try {
+			URL bg = getClass().getResource("/backgrounds");
 			Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
 			Scene scene = new Scene(root);
 			
@@ -29,7 +31,7 @@ public class View extends Application {
 			primaryStage.setResizable(true);
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("JTrash");
-			primaryStage.getIcons().add(new Image("file:resource/varie/icon16.png"));
+			primaryStage.getIcons().add(new Image(getClass().getResource("/varie/icon16.png").toString()));
 			
 			
 			primaryStage.show();

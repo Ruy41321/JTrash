@@ -1,5 +1,5 @@
 .background {
-	-fx-background-image: url("../../../../resource/backgrounds/background_2_full_screen.png");
+	-fx-background-image: url("../../../../res/backgrounds/background_2_full_screen.png");
 }
 .button {
     -fx-text-fill: white;
