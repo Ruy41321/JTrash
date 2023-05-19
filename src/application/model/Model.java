@@ -19,32 +19,46 @@ public class Model {
 	private static Scanner in = new Scanner(System.in);
 	/** Deck for the game */
 	private static Mazzo m1;
+
+	private static Model instance;
 	
 	private User u;
 	
-	private static Model instance;
 
 	/** Basic Constructor */
-	public Model() {
+	public Model(User u) {
+		this.u = u;
 		instance = this;
 	}
 	
 	public static Model getInstance() {
-		if (instance == null)
-			return new Model();
 		return instance;
 	}
 	
-	public boolean login(String nick, String pass) {
+	public static Model login(String nick, String pass) {
+		
+		instance = new Model(User.login(nick,pass));
+		if (instance.getUser() == null)
+			instance = null;
+		return instance;
+		
+		/*
 		u = User.login(nick, pass);
 		if (u==null)
-			return false;
-		return true;
+			return new Model();
+		return new Model();
+		*/
 	}
 	
-	public boolean signup(String nick, String pass) {
+	public static boolean signup(String nick, String pass) {
 		return User.signup(nick, pass);
 	}
+
+	public static void setup() {
+		instance = null;
+		m1 = null;
+	}
+
 	
 	public User getUser() {
 		return u;

@@ -28,8 +28,13 @@ public class LoginController implements Initializable{
 	private Label wrongMessage;
 	
 
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		Model.setup();
+	}
+	
 	public void doLogin(ActionEvent event){
-		if(Model.getInstance().login(username.getText(), password.getText())){
+		if(Model.login(username.getText(), password.getText()) != null){
 			View.getInstance().changeScene("Home.fxml");
 		}else
 		{
@@ -42,7 +47,7 @@ public class LoginController implements Initializable{
 	}
 	
 	public void doSignup(ActionEvent event){
-		if(Model.getInstance().signup(username.getText(), password.getText())){
+		if(Model.signup(username.getText(), password.getText())){
 			doLogin(event);
 		}else
 		{
@@ -54,10 +59,5 @@ public class LoginController implements Initializable{
 		
 	}
 
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

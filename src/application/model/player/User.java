@@ -282,7 +282,7 @@ public class User extends Player {
 	 */
 	public boolean save() {
 		try {
-			File file = new File("src/application/model/player/db/" + nick + ".json");
+			File file = new File("bin/application/model/player/db/" + nick + ".json");
 			// if the file already exist means the nick is already taken
 			if (!file.exists()) {
 				System.out.println("Errore: File in cui salvare non trovato");
@@ -314,7 +314,7 @@ public class User extends Player {
 	 * @return true if works, false if it encounter an error
 	 */
 	public boolean delete() {
-		File file = new File("src/application/model/player/db/" + nick + ".json");
+		File file = new File("bin/application/model/player/db/" + nick + ".json");
 		// if the file already exist means the nick is already taken
 		if (file.delete()) {
 			System.out.println("Elimazione eseguita");
