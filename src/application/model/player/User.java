@@ -191,7 +191,7 @@ public class User extends Player {
 			System.out.println("Il percorso inserito non è un file");
 		return false;
 	}
-
+	
 	/**
 	 * Method by which the user plays his turn
 	 * <p>
@@ -206,13 +206,13 @@ public class User extends Player {
 	@Override
 	public Carta play(Carta card) {
 		System.out.println("\nHai un " + card.toString()); // Showing the draw card
-		if (getCardNumber() - 1 < card.getV() && card.getV() < 12) {
+		if (cardIsOut(card)) {
 			// The case where he draws a card but doesn't have the position to place it
 			return null;
 		}
 		if (card.getV() < 10) {
 			// The case where it's not a figure
-			if (getCard(card.getV()).getHidenStatus()) {
+			if (cardIsHidden(card)) {
 				// The case where that position is still hidden
 				card = changeCard(card, card.getV()).clone();
 			} else
@@ -221,7 +221,7 @@ public class User extends Player {
 
 		} else {
 			// The case where it's a figure
-			if (card.getV() < 12)
+			if (!cardIsJolly(card))
 				// The case where it's a jack or queen
 				return null;
 			else {
@@ -231,7 +231,7 @@ public class User extends Player {
 					// The user choose where to place the card until he choose an hidden card
 					System.out.println("Scegli dove posizionare la carta");
 					pos = in.nextInt();
-				} while (!getCard(pos - 1).getHidenStatus());
+				} while (!getCardFromHand(pos - 1).getHidenStatus());
 				card = changeCard(card, pos - 1).clone();
 			}
 		}
@@ -337,7 +337,7 @@ public class User extends Player {
 				System.out.println("Nick non disponibile");
 			else if (file.createNewFile()) { // creating the file
 				// setting to default the Users statistics
-				int perse = 0, vinte = 0, pTot = 0, livello = 0;
+				int perse = 0, vinte = 0, pTot = 0, livello = 1;
 				String avatar = "res/varie/avatar.png";
 
 				// Initializing the Objects to write on files

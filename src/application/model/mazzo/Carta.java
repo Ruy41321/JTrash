@@ -38,6 +38,24 @@ public class Carta implements Cloneable {
 	}
 
 	/**
+	 * Getter of the seem
+	 *
+	 * @return the seem
+	 */
+	public Seme getSeme() {
+		return s;
+	}
+	
+	/**
+	 * Getter of the value
+	 *
+	 * @return the value 
+	 */
+	public Valore getValore() {
+		return v;
+	}
+	
+	/**
 	 * Method to stamp the String representation of the card if it's shown or
 	 * "Nascosta" if hidden
 	 */

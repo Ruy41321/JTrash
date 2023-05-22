@@ -66,7 +66,7 @@ public abstract class Player implements playable {
 	 * @param i the index of mano for the card to return
 	 * @return the card who correspond to the index given
 	 */
-	public Carta getCard(int i) {
+	public Carta getCardFromHand(int i) {
 		return mano[i];
 	}
 
@@ -132,4 +132,23 @@ public abstract class Player implements playable {
 			return true;
 		return false;
 	}
+	
+
+	public boolean cardIsOut(Carta card) {
+		return (getCardNumber() - 1 < card.getV() && card.getV() < 12); // The case where he draws a card but doesn't have the position to place it
+	}
+	
+	public boolean cardIsHidden(Carta card) {
+		return getCardFromHand(card.getV()).getHidenStatus();
+	}
+	
+	public boolean cardIsHidden(int index) {
+		return getCardFromHand(index).getHidenStatus();
+	}
+	
+	public boolean cardIsJolly(Carta card) {
+		return !(card.getV() < 12);
+	}
+
+	
 }

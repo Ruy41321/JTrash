@@ -168,6 +168,14 @@ public class Mazzo {
 		scarti.clear();
 
 	}
+	/**
+	 * Method to get the last discarded card
+	 *
+	 * @return the card at the top of the discard stack
+	 */
+	public Carta getLastDiscard() {
+		return scarti.get(scarti.size()-1);
+	}
 
 	/**
 	 * Method to check if there are other available cards in the main deck

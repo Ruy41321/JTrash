@@ -38,6 +38,10 @@ public class Npc extends Player {
 	public Npc(String user) {
 		super(randName(user));
 	}
+	
+	public static void resetRandomNameGenerator() {
+		namesValue = new ArrayList<>();
+	}
 
 	/**
 	 * Method by which all the Npc play their turns
@@ -58,7 +62,7 @@ public class Npc extends Player {
 			return null;
 		if (card.getV() < 10) {
 			// The case where it's not a figure
-			if (getCard(card.getV()).getHidenStatus()) {
+			if (getCardFromHand(card.getV()).getHidenStatus()) {
 				// The case where that position is still hidden
 				card = changeCard(card, card.getV()).clone();
 			} else
@@ -76,7 +80,7 @@ public class Npc extends Player {
 				do {
 					pos = rand.nextInt(getCardNumber()); // Picking a random number to choose with which card switch the
 															// drawn one
-				} while (!getCard(pos).getHidenStatus()); // repeating the random picking until it choose an hidden card
+				} while (!getCardFromHand(pos).getHidenStatus()); // repeating the random picking until it choose an hidden card
 				card = changeCard(card, pos).clone();
 			}
 		}

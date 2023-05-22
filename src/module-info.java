@@ -4,6 +4,7 @@ module JTrashFX {
 	requires javafx.fxml;
 	requires javafx.base;
 	requires javafx.graphics;
+	requires java.desktop;
 	
 	exports application.controller;
 

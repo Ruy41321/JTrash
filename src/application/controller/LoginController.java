@@ -30,7 +30,7 @@ public class LoginController implements Initializable{
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		Model.setup();
+		Model.reset();
 	}
 	
 	public void doLogin(ActionEvent event){

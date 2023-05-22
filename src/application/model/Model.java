@@ -15,55 +15,114 @@ import application.model.player.User;
  *
  */
 public class Model {
-	/** Text Scanner */
-	private static Scanner in = new Scanner(System.in);
-	/** Deck for the game */
-	private static Mazzo m1;
-
+	/** Instance of the class */
 	private static Model instance;
-	
-	private User u;
-	
 
-	/** Basic Constructor */
-	public Model(User u) {
+	/** Deck for the game */
+	private Mazzo mazzo;
+
+	/**
+	 * The User object to save all his data
+	 */
+	private User u;
+
+	/**
+	 * Array used to manage all the player who are playing
+	 */
+	private Player[] players;
+
+	/**
+	 * Constructor using the user who's playing
+	 * 
+	 * @param u The User logged in
+	 */
+	private Model(User u) {
 		this.u = u;
 		instance = this;
 	}
-	
+
+	public static class ClassNotInstancedException extends Exception {
+
+		private static final long serialVersionUID = 1L;
+
+		public ClassNotInstancedException(String message) {
+			super(message);
+		}
+
+	}
+
 	public static Model getInstance() {
+		try {
+			if (instance == null)
+				throw new ClassNotInstancedException(
+						"There is no current instance of Model, to get an instance you have to login");
+		} catch (ClassNotInstancedException e) {
+			e.printStackTrace();
+		}
 		return instance;
 	}
-	
+
 	public static Model login(String nick, String pass) {
-		
-		instance = new Model(User.login(nick,pass));
+
+		instance = new Model(User.login(nick, pass));
 		if (instance.getUser() == null)
 			instance = null;
 		return instance;
-		
+
 		/*
-		u = User.login(nick, pass);
-		if (u==null)
-			return new Model();
-		return new Model();
-		*/
+		 * u = User.login(nick, pass); if (u==null) return new Model(); return new
+		 * Model();
+		 */
 	}
-	
+
 	public static boolean signup(String nick, String pass) {
 		return User.signup(nick, pass);
 	}
 
-	public static void setup() {
+	public static void reset() {
 		instance = null;
-		m1 = null;
+		Npc.resetRandomNameGenerator();
+	}
+	
+	public void resetGame() {
+		players = null;
+		mazzo = null;
+		Npc.resetRandomNameGenerator();
 	}
 
-	
 	public User getUser() {
 		return u;
 	}
 
+	public Mazzo getMazzo() {
+		return mazzo;
+	}
+
+	public void setMazzo(int numOfNpc) {
+		mazzo = (numOfNpc == 1) ? new Mazzo() : new Mazzo(2);// Generate a deck of 54 cards if true, else of 108 cards
+																// like the merge of 2 standard decks
+	}
+
+	public Player[] getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(int numOfNpc) {
+		this.players = new Player[numOfNpc + 1];// Creating an array of player who contains the Player's instances of
+												// size(number of Npc + one user)
+		players[0] = u; // Setting the User in the first field
+		for (int i = 1; i < numOfNpc + 1; i++)
+			players[i] = new Npc(players[0].getName()); // Setting the following fields for the Npc
+	}
+
+	public void updateUserStats(boolean hasWin) {
+		u.endGame(hasWin);
+	}
+	
+	public void checkIfMazzoHasNext() {
+		if (!mazzo.hasNext()) // If the deck is over continue using the mixed discard pile
+			mazzo.mixScarti();
+	}
 	/**
 	 * This is the main body of the game, it permit to sign up/log in and to play.
 	 * <p>
@@ -74,62 +133,49 @@ public class Model {
 	 */
 	public void main(String[] args) {
 
-		// Initializing
-		System.out.println("Con quanti NPC vuoi giocare? 1,2,3?");
-		int npc = in.nextInt();
-		m1 = (npc == 1) ? new Mazzo() : new Mazzo(2);// Generate a deck of 54 cards if true, else of 108 cards like the
-														// merge of 2 standard decks
-
-		Player[] p = new Player[npc + 1];// Creating an array of player who contains the Player's instances of size(npc
-											// + user)
-		p[0] = u; // Setting the User in the first field
-		for (int i = 1; i < npc + 1; i++)
-			p[i] = new Npc(p[0].getName()); // Setting the following fields for the Npc
-
 		boolean trasherFlag; // Flag to know if someone has done trash
 
 		// Game starting
 		while (true) { // Go on until someone win
 			// m1.stamp();
-			phase1(p); // Distribute the cards
+			distributeCards(); // Distribute the cards
 
 			do {
 				trasherFlag = false;
 				// Starting the turn for each player
-				for (Player pl : p) {
-					if (!m1.hasNext()) // If the deck is over continue using the mixed discard pile
-						m1.mixScarti();
+				for (Player pl : players) {
+					
 
 					phase2(pl); // The Player plays
 
 					if (pl.checkWin()) { // Check if the current player won
-						if (p[0].checkWin()) { // Check if the current player who has won is the User
-							((User) p[0]).endGame(true);
+						if (players[0].checkWin()) { // Check if the current player who has won is the User
+							((User) players[0]).endGame(true);
 							System.exit(0);
 						}
 						System.out.println("Ha vinto il giocatore: " + pl.getName());
-						((User) p[0]).endGame(false);
+						((User) players[0]).endGame(false);
 						System.exit(0);
 					}
 					if (pl.getTrashStatus()) { // Check if the current Player has done trash
 						trasherFlag = true;
 						// Giving to all the others one last round
-						for (Player pLeft : p) {
+						for (Player pLeft : players) {
 							if (pLeft.equals(pl))
 								continue; // The just trasher player can't play the last round
 
-							if (!m1.hasNext())// If the deck is over continue using the mixed discard pile
-								m1.mixScarti();
+							if (!mazzo.hasNext())// If the deck is over continue using the mixed discard pile
+								mazzo.mixScarti();
 
 							phase2(pLeft);
 
 							if (pLeft.checkWin()) {
-								if (p[0].checkWin()) {
-									((User) p[0]).endGame(true);
+								if (players[0].checkWin()) {
+									((User) players[0]).endGame(true);
 									System.exit(0);
 								}
 								System.out.println("Ha vinto il giocatore: " + pLeft.getName());
-								((User) p[0]).endGame(false);
+								((User) players[0]).endGame(false);
 								System.exit(0);
 							}
 							if (pLeft.getTrashStatus())
@@ -143,21 +189,19 @@ public class Model {
 	}
 
 	/**
-	 * The phase1 method is the starting phase of the game, in this phase the
+	 * The distributeCards method is the starting phase of the game, in this phase the
 	 * players get the card for their starting hand and set the TrashStatus on false
 	 *
-	 * @param p the array containing the Players instances
 	 */
-	private static void phase1(Player[] p) {
-		m1.mix(); // Mix the deck
-		for (Player pl : p) {
+	public void distributeCards() {
+		mazzo.mix(); // Mix the deck
+		for (Player pl : players) {
 			// System.out.println(pl.getName());
-			pl.setMano(m1.getMano(pl.getCardNumber()));
+			pl.setMano(mazzo.getMano(pl.getCardNumber()));
 			pl.setTrashStatus();
 			// pl.stampMano();
 		}
-		m1.discard(m1.next());
-
+		mazzo.discard(mazzo.next());
 	}
 
 	/**
@@ -171,26 +215,27 @@ public class Model {
 	 *
 	 * @param pl the array containing the Players instances
 	 */
-	private static void phase2(Player pl) {
+	private void phase2(Player pl) {
+		checkIfMazzoHasNext();
+		
 		System.out.println("E' il turno di: " + pl.getName());
-		Carta newC = m1.next(); // drawing the card
+		Carta newC = mazzo.next(); // drawing the card
 		while (!pl.getTrashStatus()) { // the turn goes on until there is a break condition or someone has trashed
 
 			pl.stampMano();
 			Carta prima = newC.clone();
 			newC = pl.play(newC);
 			if (newC == null) {
-				m1.discard(prima);
+				mazzo.discard(prima);
 				break;
 			}
 		}
 
 		if (pl.getTrashStatus()) {
-			m1.discard(newC);
+			mazzo.discard(newC);
 			System.out.println(pl.getName() + " dice Trash");
 		}
 
 	}
-
 
 }
