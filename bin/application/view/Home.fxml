@@ -116,7 +116,8 @@
                   <SeparatorMenuItem mnemonicParsing="false">
                      <content>
                         <Separator style="-fx-background-color: grey;" />
-                     </content></SeparatorMenuItem>
+                     </content>
+                  </SeparatorMenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#disconnect">
                      <graphic>
                         <Button graphicTextGap="0.0" mnemonicParsing="false" style="-fx-background-color: linear-gradient(to right, #ff3300 0%, #ff9999 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );" text="Disconnect" textFill="WHITE">
@@ -683,7 +684,7 @@
                      </children></HBox>
                </children>
             </VBox>
-            <VBox fx:id="botChooser" alignment="CENTER" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <VBox fx:id="npcChooser" alignment="CENTER" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <HBox alignment="CENTER">
                      <children>
@@ -691,7 +692,7 @@
                            <children>
                               <HBox alignment="CENTER" layoutY="97.0" prefHeight="100.0" prefWidth="498.0" spacing="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                                  <children>
-                                    <CheckBox fx:id="uno" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#botSelection" prefHeight="100.0" prefWidth="100.0">
+                                    <CheckBox fx:id="uno" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#npcSelection" prefHeight="100.0" prefWidth="100.0">
                                        <graphic>
                                           <ImageView fitHeight="102.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -700,7 +701,7 @@
                                           </ImageView>
                                        </graphic>
                                     </CheckBox>
-                                    <CheckBox fx:id="due" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#botSelection" prefHeight="100.0" prefWidth="100.0">
+                                    <CheckBox fx:id="due" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#npcSelection" prefHeight="100.0" prefWidth="100.0">
                                        <graphic>
                                           <ImageView fitHeight="102.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -712,7 +713,7 @@
                                           <Insets />
                                        </HBox.margin>
                                     </CheckBox>
-                                    <CheckBox fx:id="tre" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#botSelection" prefHeight="100.0" prefWidth="100.0">
+                                    <CheckBox fx:id="tre" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#npcSelection" prefHeight="100.0" prefWidth="100.0">
                                        <graphic>
                                           <ImageView fitHeight="102.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
@@ -756,8 +757,11 @@
                </children>
             </VBox>
             <VBox fx:id="drawnCardContainer" alignment="BOTTOM_CENTER" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <padding>
+                  <Insets left="350.0" />
+               </padding>
                <children>
-                  <ImageView fx:id="drawnCard" fitHeight="292.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
+                  <ImageView fx:id="drawnCard" fitHeight="292.0" fitWidth="180.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <effect>
                         <DropShadow height="114.79" radius="42.972500000000004" width="59.1">
                            <color>
@@ -770,9 +774,6 @@
                      </image>
                   </ImageView>
                </children>
-               <padding>
-                  <Insets left="350.0" />
-               </padding>
             </VBox>
          </children>
       </AnchorPane>
