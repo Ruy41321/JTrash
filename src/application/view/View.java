@@ -48,6 +48,7 @@ public class View extends Application {
 		try {
 			stg.hide();
 			Parent root = FXMLLoader.load(getClass().getResource(fxml));
+			stg.setMaximized(true);
 			stg.getScene().setRoot(root);
 			stg.show();
 		}catch(IOException e) {

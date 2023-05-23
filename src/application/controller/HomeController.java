@@ -258,7 +258,7 @@ public class HomeController implements Initializable {
 
 	private ImageView[] npc3Cards;
 
-	private int npcWhosPlaying = 1;
+	private int npcWhosPlaying = 0;
 
 	public Effect getClickableEffect() {
 		return clickableEffect;
@@ -518,7 +518,7 @@ public class HomeController implements Initializable {
 		// da implementare tutti i controlli per gestire le figure e le carte gia
 		// piazzate
 		if (Model.getInstance().getUser().cardIsOut(newC)) {
-			// case when the card is bigger than 10 or the player remaining cards number
+			// case when the card is bigger than 10 or than the player remaining cards number
 			discardButton.setDisable(false);
 		} else {
 			if (Model.getInstance().getUser().cardIsJolly(newC)) {
@@ -643,13 +643,13 @@ public class HomeController implements Initializable {
 		//npc2 if it's present plays
 		if (npc2_hand.isVisible()) {
 			allertBox.setText("E' il turno di: " + Model.getInstance().getPlayers()[2].getName());
-			showNpcTurnFading(allertBox, Duration.seconds(2), Model.getInstance().getPlayers()[2], npc2Cards);
+			showNpcTurnFading(allertBox, Duration.seconds(1), Model.getInstance().getPlayers()[2], npc2Cards);
 			
 			//npcPlay(Model.getInstance().getPlayers()[2], npc2Cards);
 		}else {
 		//npc1 which is always present plays
 			allertBox.setText("E' il turno di: " + Model.getInstance().getPlayers()[1].getName());
-			showNpcTurnFading(allertBox, Duration.seconds(2), Model.getInstance().getPlayers()[1], npc1Cards);
+			showNpcTurnFading(allertBox, Duration.seconds(1), Model.getInstance().getPlayers()[1], npc1Cards);
 		}
 		
 		//npcPlay(Model.getInstance().getPlayers()[1], npc1Cards);
@@ -669,6 +669,7 @@ public class HomeController implements Initializable {
 	}
 
 	private void showNpcTurnFading(Object JObj, Duration delay, Player npc, ImageView[] hand) {
+		npcWhosPlaying++;
 		FadeTransition fadeTransition = new FadeTransition(delay, (Node) JObj);
 		fadeTransition.setFromValue(0);
 		fadeTransition.setToValue(1);
@@ -692,27 +693,14 @@ public class HomeController implements Initializable {
 		String valore = newC.getValore().toEnglishStringValue();
 		drawnCard.setImage(
 				new Image("file:../../res/cards/" + seme.toLowerCase() + "/card" + seme + "_" + valore + ".png"));
+		drawnCard.setOpacity(0);
 		drawnCardContainer.setVisible(true);
-		FadeTransition fadeTransition = new FadeTransition(delay, (Node) drawnCard);
+		FadeTransition fadeTransition = new FadeTransition(delay, drawnCard);
 		fadeTransition.setFromValue(0);
 		fadeTransition.setToValue(1);
 		fadeTransition.setOnFinished(event -> {
 			npcPlay(npc, hand);
-			if (npcWhosPlaying == 1 && npc2_hand.isVisible()) {
-				npcWhosPlaying ++;
-				allertBox.setText("E' il turno di: " + Model.getInstance().getPlayers()[1].getName());
-				showNpcTurnFading(allertBox, delay, Model.getInstance().getPlayers()[1], npc1Cards);
-			}else if (npcWhosPlaying == 2 && npc3_hand.isVisible()) {
-				npcWhosPlaying ++;
-				allertBox.setText("E' il turno di: " + Model.getInstance().getPlayers()[3].getName());
-				showNpcTurnFading(allertBox, delay, Model.getInstance().getPlayers()[3], npc3Cards);
-			}else if (npcWhosPlaying == 1 && !npc2_hand.isVisible()) {
-				npcWhosPlaying = 0;
-				allowUserToPlay();
-			}else if (npcWhosPlaying == 3) {
-				npcWhosPlaying = 0;
-				allowUserToPlay();
-			}
+			
 		});
 		fadeTransition.play();
 	}
@@ -744,6 +732,22 @@ public class HomeController implements Initializable {
 		if (npc.cardIsOut(newC)) {
 			// case when the card is bigger than 10 or the player remaining cards number
 			npcDiscardsCard();
+
+			if (npcWhosPlaying == 1 && npc2_hand.isVisible()) {
+			//	npcWhosPlaying ++;
+				allertBox.setText("E' il turno di: " + Model.getInstance().getPlayers()[1].getName());
+				showNpcTurnFading(allertBox, Duration.seconds(1), Model.getInstance().getPlayers()[1], npc1Cards);
+			}else if (npcWhosPlaying == 2 && npc3_hand.isVisible()) {
+			//	npcWhosPlaying ++;
+				allertBox.setText("E' il turno di: " + Model.getInstance().getPlayers()[3].getName());
+				showNpcTurnFading(allertBox, Duration.seconds(1), Model.getInstance().getPlayers()[3], npc3Cards);
+			}else if (npcWhosPlaying == 1 && !npc2_hand.isVisible()) {
+				npcWhosPlaying = 0;
+				allowUserToPlay();
+			}else if (npcWhosPlaying == 3) {
+				npcWhosPlaying = 0;
+				allowUserToPlay();
+			}
 			return;
 		} else {
 			if (npc.cardIsJolly(newC)) {
@@ -752,6 +756,21 @@ public class HomeController implements Initializable {
 			} else if (!npc.cardIsHidden(newC)) {
 				// case when the card to replace is already replaced
 				npcDiscardsCard();
+				if (npcWhosPlaying == 1 && npc2_hand.isVisible()) {
+					//	npcWhosPlaying ++;
+						allertBox.setText("E' il turno di: " + Model.getInstance().getPlayers()[1].getName());
+						showNpcTurnFading(allertBox, Duration.seconds(1), Model.getInstance().getPlayers()[1], npc1Cards);
+					}else if (npcWhosPlaying == 2 && npc3_hand.isVisible()) {
+					//	npcWhosPlaying ++;
+						allertBox.setText("E' il turno di: " + Model.getInstance().getPlayers()[3].getName());
+						showNpcTurnFading(allertBox, Duration.seconds(1), Model.getInstance().getPlayers()[3], npc3Cards);
+					}else if (npcWhosPlaying == 1 && !npc2_hand.isVisible()) {
+						npcWhosPlaying = 0;
+						allowUserToPlay();
+					}else if (npcWhosPlaying == 3) {
+						npcWhosPlaying = 0;
+						allowUserToPlay();
+					}
 				return;
 			} else {
 				// case when the card is a number and it's still hidden
@@ -759,7 +778,7 @@ public class HomeController implements Initializable {
 			}
 		}
 		if (!npc.getTrashStatus()) //it continue to to invoke itSelf method until the npc do trash or discard
-			npcShowCardToPlay(Duration.seconds(2), npc, npcHand);
+			npcShowCardToPlay(Duration.seconds(1), npc, npcHand);
 	}
 
 	private void updateDiscardPile() {
