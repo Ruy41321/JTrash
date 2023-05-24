@@ -314,12 +314,6 @@ public class HomeController implements Initializable {
 	public void setClickableEffect(Effect clickableEffect) {
 		this.clickableEffect = clickableEffect;
 	}
-	
-
-	public void setGameCommandsDisableStatus(boolean status) {
-		trashButton.setDisable(status);
-		drawButton.setDisable(status);
-	}
 
 	/**
 	 * This method shows a String got as input in the allertBox label in the middle of the screen (above the deck) applying the Fade Transition
@@ -619,6 +613,23 @@ public class HomeController implements Initializable {
 			if (Model.getInstance().getUser().cardIsHidden(i))
 				applyClickableEffect(String.valueOf(i + 1));
 		}
+	}
+	
+	public ImageView getCardViewByValue(String cardValue) {
+		return switch (cardValue) {
+		case "A" -> user1;
+		case "1" -> user1;
+		case "2" -> user2;
+		case "3" -> user3;
+		case "4" -> user4;
+		case "5" -> user5;
+		case "6" -> user6;
+		case "7" -> user7;
+		case "8" -> user8;
+		case "9" -> user9;
+		case "10" -> user10;
+		default -> null;
+		};
 	}
 
 	public void applyClickableEffect(String cardValue) {
