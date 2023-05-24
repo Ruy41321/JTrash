@@ -27,6 +27,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -299,7 +300,7 @@ public class HomeController implements Initializable {
 	 * @return
 	 * the Effect of a clickable card
 	 */
-	public Effect getClickableEffect() {
+	private Effect getClickableEffect() {
 		return clickableEffect;
 	}
 
@@ -311,7 +312,7 @@ public class HomeController implements Initializable {
 	 * 
 	 * @param clickableEffect is the Effect with which sets the property
 	 */
-	public void setClickableEffect(Effect clickableEffect) {
+	private void setClickableEffect(Effect clickableEffect) {
 		this.clickableEffect = clickableEffect;
 	}
 
@@ -325,7 +326,7 @@ public class HomeController implements Initializable {
 	 * @param reverse Is a boolean needed to indicate if the transition have to disappear fading in reverse
 	 * @param onFinish Is the EventHandler with which set the OnFinished Transition Property 
 	 */
-	public void fadeEffect(String text, Duration time, double opacityStart, double opacityEnd,  boolean reverse, EventHandler<ActionEvent> onFinish) {
+	private void fadeEffect(String text, Duration time, double opacityStart, double opacityEnd,  boolean reverse, EventHandler<ActionEvent> onFinish) {
 		allertBox.setText(text);
 		FadeTransition fadeTransition = new FadeTransition(time, allertBox);
 		//settings
@@ -350,7 +351,7 @@ public class HomeController implements Initializable {
 	 * @param reverse Is a boolean needed to indicate if the transition have to disappear fading in reverse
 	 * @param onFinish Is the EventHandler with which set the OnFinished Transition Property 
 	 */
-	public void fadeEffect(Object JObj, Duration time, double opacityStart, double opacityEnd,  boolean reverse, EventHandler<ActionEvent> onFinish) {
+	private void fadeEffect(Object JObj, Duration time, double opacityStart, double opacityEnd,  boolean reverse, EventHandler<ActionEvent> onFinish) {
 		FadeTransition fadeTransition = new FadeTransition(time, (Node) JObj);
 		//settings
 		fadeTransition.setFromValue(opacityStart);
@@ -365,9 +366,61 @@ public class HomeController implements Initializable {
 	}
 	
 	/**
+	 * This method returns the ImageView of the player card on the position got as parameter
+	 * @param position The position of the card to return
+	 * @return the ImageView of the card on the specified position
+	 */
+	private ImageView getCardViewByPosition(String position) {
+		return switch (position) {
+		case "A" -> user1;
+		case "1" -> user1;
+		case "2" -> user2;
+		case "3" -> user3;
+		case "4" -> user4;
+		case "5" -> user5;
+		case "6" -> user6;
+		case "7" -> user7;
+		case "8" -> user8;
+		case "9" -> user9;
+		case "10" -> user10;
+		default -> null;
+		};
+	}
+
+	/**
+	 * This method apply to the Node got in input an effect to inform that it can be clicked
+	 * and the EventHandler also got as parameter if the boolean got is true,
+	 *  else it set the effect and the event to null
+	 * @param JObj Is the node on which set the effect
+	 * @param isClickable Is a boolean to know if apply or delete the effect
+	 * @param onMouseClick is the EventHandler to set as onMouseClick Action
+	 */
+	private void setClickableEffect(Node JObj, boolean isClickable, EventHandler<MouseEvent> onMouseClick) {
+		if(isClickable) {
+			JObj.setEffect(clickableEffect);
+			JObj.setOnMouseClicked(onMouseClick);
+		}else {
+			JObj.setEffect(null);
+			JObj.setOnMouseClicked(null);
+		}
+	}
+
+	/**
+	 * This method apply the clickableEffect on all cards that are still Hidden
+	 */
+	private void applyClickableEffectToAllHidenCards() {
+		for (int i = 0; i < Model.getInstance().getUser().getCardNumber(); i++) {
+			if (Model.getInstance().getUser().cardIsHidden(i)) {
+				ImageView card = getCardViewByPosition(String.valueOf(i + 1));
+				setClickableEffect(card, true, this::switchCard);
+			}
+		}
+	}
+	
+	/**
 	 * This method able the User to play fading in that is his turn
 	 */
-	public void switchToUserTurn() {
+	private void switchToUserTurn() {
 		fadeEffect(username.getText() + " è il tuo turno !!!", Duration.seconds(2), 0, 1, true, null);
 		drawButton.setDisable(false);
 	}
@@ -518,6 +571,17 @@ public class HomeController implements Initializable {
 		selection = (CheckBox) e.getSource();
 		selection.setSelected(true);
 	}
+	
+	/**
+	 * This method update the view of the discard pile showing the last discarded card
+	 */
+	private void updateDiscardPile() {
+		Carta scarto = Model.getInstance().getMazzo().getLastDiscard();
+		String seme = scarto.getSeme().toEnglishString();
+		String valore = scarto.getValore().toEnglishStringValue();
+		scarti.setImage(
+				new Image("file:../../res/cards/" + seme.toLowerCase() + "/card" + seme + "_" + valore + ".png"));
+	}
 
 	/**
 	 * This method starts the game: using the selection property it works only if a number of npc is selected.
@@ -602,63 +666,19 @@ public class HomeController implements Initializable {
 				discardButton.setDisable(false);
 			} else {
 				// case when the card is a number and the card to replace is still hidden
-				applyClickableEffect(valore);
+				setClickableEffect(getCardViewByPosition(valore), true, this::switchCard);
 			}
 		}
 		drawButton.setDisable(true);
 	}
 
-	private void applyClickableEffectToAllHidenCards() {
-		for (int i = 0; i < Model.getInstance().getUser().getCardNumber(); i++) {
-			if (Model.getInstance().getUser().cardIsHidden(i))
-				applyClickableEffect(String.valueOf(i + 1));
-		}
-	}
 	
-	public ImageView getCardViewByValue(String cardValue) {
-		return switch (cardValue) {
-		case "A" -> user1;
-		case "1" -> user1;
-		case "2" -> user2;
-		case "3" -> user3;
-		case "4" -> user4;
-		case "5" -> user5;
-		case "6" -> user6;
-		case "7" -> user7;
-		case "8" -> user8;
-		case "9" -> user9;
-		case "10" -> user10;
-		default -> null;
-		};
-	}
 
-	public void applyClickableEffect(String cardValue) {
-		ImageView card = switch (cardValue) {
-		case "A" -> user1;
-		case "1" -> user1;
-		case "2" -> user2;
-		case "3" -> user3;
-		case "4" -> user4;
-		case "5" -> user5;
-		case "6" -> user6;
-		case "7" -> user7;
-		case "8" -> user8;
-		case "9" -> user9;
-		case "10" -> user10;
-		default -> throw new IllegalArgumentException("Unexpected value: " + cardValue);
-		};
-		card.setEffect(clickableEffect);
-		card.setOnMouseClicked(event -> {
-			switchCard(card);
-		});
-	}
-
-	public void unClickableCard(ImageView card) {
-		card.setEffect(null);
-		card.setOnMouseClicked(null);
-	}
-
-	public void switchCard(ImageView card) {
+	private void switchCard(MouseEvent event) {
+		if (event.getSource() instanceof ImageView == false) 
+			System.exit(2);
+		ImageView card = (ImageView) event.getSource();
+		
 		// switch in the model
 		newC = Model.getInstance().getUser().changeCard(newC, Integer.parseInt(card.getId().substring(4)) - 1).clone();
 		Model.getInstance().getUser().setTrashStatus();
@@ -667,7 +687,7 @@ public class HomeController implements Initializable {
 		drawnCardContainer.setVisible(false);
 
 		for (ImageView img : userCards) {
-			unClickableCard(img);
+			setClickableEffect(img, false, null);
 		}
 
 		// checks if Trash
@@ -679,7 +699,10 @@ public class HomeController implements Initializable {
 		playCard(); // play with the returned card of the switching
 	}
 
-	public void npcSwitchCard(Player npc, ImageView[] npcHand) {
+	//***********************main game logic method**********************
+	//*****************************npc actions***************************
+	
+	private void npcSwitchCard(Player npc, ImageView[] npcHand) {
 		ImageView card;
 		try {
 			card = npcHand[newC.getV()];
@@ -708,7 +731,7 @@ public class HomeController implements Initializable {
 	}
 
 
-	public void npcDiscardsCard() {
+	private void npcDiscardsCard() {
 		Model.getInstance().getMazzo().discard(newC);
 		updateDiscardPile();
 		newC = null;
@@ -838,6 +861,9 @@ public class HomeController implements Initializable {
 					}else if (npcWhosPlaying == 1 && !npc2_hand.isVisible()) {
 						npcWhosPlaying = 0;
 						switchToUserTurn();
+					}else if (npcWhosPlaying == 2 && !npc3_hand.isVisible()) {
+						npcWhosPlaying = 0;
+						switchToUserTurn();
 					}else if (npcWhosPlaying == 3) {
 						npcWhosPlaying = 0;
 						switchToUserTurn();
@@ -852,11 +878,5 @@ public class HomeController implements Initializable {
 			npcShowCardToPlay(Duration.seconds(1), npc, npcHand);
 	}
 
-	private void updateDiscardPile() {
-		Carta scarto = Model.getInstance().getMazzo().getLastDiscard();
-		String seme = scarto.getSeme().toEnglishString();
-		String valore = scarto.getValore().toEnglishStringValue();
-		scarti.setImage(
-				new Image("file:../../res/cards/" + seme.toLowerCase() + "/card" + seme + "_" + valore + ".png"));
-	}
+
 }
