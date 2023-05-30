@@ -9,6 +9,7 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.image.Image?>
@@ -21,7 +22,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="1000.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.HomeController">
+<VBox alignment="TOP_CENTER" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.HomeController">
   <children>
       <AnchorPane style="-fx-background-color: linear-gradient(to bottom left, #009933 1%, #003300 100%);" VBox.vgrow="NEVER">
          <children>
@@ -249,131 +250,39 @@
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane minHeight="0.0" styleClass="background" stylesheets="@css/Login.css" VBox.vgrow="ALWAYS">
-         <children>
-            <VBox fx:id="gameField" alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane VBox.vgrow="ALWAYS">
+         <items>
+            <AnchorPane minHeight="0.0" styleClass="background" stylesheets="@css/Login.css">
                <children>
-                  <HBox alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
+                  <VBox fx:id="gameField" alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <VBox alignment="TOP_CENTER" rotate="180.0" HBox.hgrow="ALWAYS">
+                        <HBox alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
                            <children>
-                              <HBox alignment="CENTER" spacing="20.0">
-                                 <children>
-                                    <ImageView fx:id="npc1_1" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="npc1_2" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="npc1_3" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="npc1_4" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="npc1_5" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                 </padding>
-                              </HBox>
-                              <HBox alignment="CENTER" spacing="20.0">
-                                 <children>
-                                    <ImageView fx:id="npc1_6" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="npc1_7" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="npc1_8" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="npc1_9" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="npc1_10" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                 </padding>
-                              </HBox>
-                              <Label fx:id="npc1_name" alignment="CENTER" rotate="180.0" style="-fx-text-fill: linear-gradient(to top right, #ff9933 0%, #ff3300 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );">
-                                 <font>
-                                    <Font name="Dubai Medium" size="25.0" />
-                                 </font>
-                                 <textFill>
-                                    <LinearGradient endX="0.4881516587677725" endY="0.838862559241706" startX="0.5023696682464456" startY="0.12796208530805694">
-                                       <stops>
-                                          <Stop>
-                                             <color>
-                                                <Color red="0.43421053886413574" green="0.4181286692619324" blue="0.4181286692619324" />
-                                             </color>
-                                          </Stop>
-                                          <Stop offset="1.0">
-                                             <color>
-                                                <Color red="1.0" green="0.9953703880310059" blue="0.9953703880310059" />
-                                             </color>
-                                          </Stop>
-                                       </stops>
-                                    </LinearGradient>
-                                 </textFill>
-                              </Label>
-                           </children>
-                        </VBox>
-                     </children></HBox>
-                  <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
-                     <children>
-                        <HBox alignment="CENTER_LEFT" HBox.hgrow="NEVER">
-                           <children>
-                              <VBox fx:id="npc2_hand" alignment="CENTER" rotate="90.0" HBox.hgrow="ALWAYS">
+                              <VBox alignment="TOP_CENTER" rotate="180.0" HBox.hgrow="ALWAYS">
                                  <children>
                                     <HBox alignment="CENTER" spacing="20.0">
                                        <children>
-                                          <ImageView fx:id="npc2_1" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="npc1_1" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fx:id="npc2_2" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="npc1_2" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fx:id="npc2_3" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="npc1_3" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fx:id="npc2_4" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="npc1_4" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fx:id="npc2_5" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="npc1_5" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
@@ -385,27 +294,27 @@
                                     </HBox>
                                     <HBox alignment="CENTER" spacing="20.0">
                                        <children>
-                                          <ImageView fx:id="npc2_6" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="npc1_6" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fx:id="npc2_7" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="npc1_7" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fx:id="npc2_8" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="npc1_8" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fx:id="npc2_9" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="npc1_9" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fx:id="npc2_10" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="npc1_10" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
@@ -415,7 +324,7 @@
                                           <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                                        </padding>
                                     </HBox>
-                                    <Label fx:id="npc2_name" alignment="CENTER" style="-fx-text-fill: linear-gradient(to top right, #ff9933 0%, #ff3300 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );">
+                                    <Label fx:id="npc1_name" alignment="CENTER" rotate="180.0" style="-fx-text-fill: linear-gradient(to top right, #ff9933 0%, #ff3300 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );">
                                        <font>
                                           <Font name="Dubai Medium" size="25.0" />
                                        </font>
@@ -440,82 +349,279 @@
                               </VBox>
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                        <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
                            <children>
-                              <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                              <HBox alignment="CENTER_LEFT" HBox.hgrow="NEVER">
                                  <children>
-                                    <Label fx:id="allertBox" opacity="0.0" style="-fx-text-fill: linear-gradient(to top right, #ff9933 0%, #ff3300 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );">
-                                       <font>
-                                          <Font name="Dubai Medium" size="50.0" />
-                                       </font>
-                                       <textFill>
-                                          <LinearGradient endX="0.4881516587677725" endY="0.838862559241706" startX="0.5023696682464456" startY="0.12796208530805694">
-                                             <stops>
-                                                <Stop>
-                                                   <color>
-                                                      <Color red="0.43421053886413574" green="0.4181286692619324" blue="0.4181286692619324" />
-                                                   </color>
-                                                </Stop>
-                                                <Stop offset="1.0">
-                                                   <color>
-                                                      <Color red="1.0" green="0.9953703880310059" blue="0.9953703880310059" />
-                                                   </color>
-                                                </Stop>
-                                             </stops>
-                                          </LinearGradient>
-                                       </textFill>
-                                    </Label>
-                                    <HBox alignment="CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
+                                    <VBox fx:id="npc2_hand" alignment="CENTER" rotate="90.0" HBox.hgrow="ALWAYS">
                                        <children>
-                                          <ImageView fx:id="mazzo" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                             </image>
-                                          </ImageView>
-                                          <ImageView fx:id="scarti" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                             </image>
-                                          </ImageView>
+                                          <HBox alignment="CENTER" spacing="20.0">
+                                             <children>
+                                                <ImageView fx:id="npc2_1" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fx:id="npc2_2" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fx:id="npc2_3" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fx:id="npc2_4" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fx:id="npc2_5" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                             </padding>
+                                          </HBox>
+                                          <HBox alignment="CENTER" spacing="20.0">
+                                             <children>
+                                                <ImageView fx:id="npc2_6" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fx:id="npc2_7" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fx:id="npc2_8" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fx:id="npc2_9" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fx:id="npc2_10" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                             </padding>
+                                          </HBox>
+                                          <Label fx:id="npc2_name" alignment="CENTER" style="-fx-text-fill: linear-gradient(to top right, #ff9933 0%, #ff3300 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );">
+                                             <font>
+                                                <Font name="Dubai Medium" size="25.0" />
+                                             </font>
+                                             <textFill>
+                                                <LinearGradient endX="0.4881516587677725" endY="0.838862559241706" startX="0.5023696682464456" startY="0.12796208530805694">
+                                                   <stops>
+                                                      <Stop>
+                                                         <color>
+                                                            <Color red="0.43421053886413574" green="0.4181286692619324" blue="0.4181286692619324" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="1.0">
+                                                         <color>
+                                                            <Color red="1.0" green="0.9953703880310059" blue="0.9953703880310059" />
+                                                         </color>
+                                                      </Stop>
+                                                   </stops>
+                                                </LinearGradient>
+                                             </textFill>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label fx:id="allertBox" opacity="0.0" style="-fx-text-fill: linear-gradient(to top right, #ff9933 0%, #ff3300 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );">
+                                             <font>
+                                                <Font name="Dubai Medium" size="50.0" />
+                                             </font>
+                                             <textFill>
+                                                <LinearGradient endX="0.4881516587677725" endY="0.838862559241706" startX="0.5023696682464456" startY="0.12796208530805694">
+                                                   <stops>
+                                                      <Stop>
+                                                         <color>
+                                                            <Color red="0.43421053886413574" green="0.4181286692619324" blue="0.4181286692619324" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="1.0">
+                                                         <color>
+                                                            <Color red="1.0" green="0.9953703880310059" blue="0.9953703880310059" />
+                                                         </color>
+                                                      </Stop>
+                                                   </stops>
+                                                </LinearGradient>
+                                             </textFill>
+                                          </Label>
+                                          <HBox alignment="CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
+                                             <children>
+                                                <ImageView fx:id="mazzo" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fx:id="scarti" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                             </padding>
+                                          </HBox>
                                        </children>
                                        <padding>
-                                          <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                          <Insets bottom="90.0" />
                                        </padding>
-                                    </HBox>
+                                    </VBox>
                                  </children>
-                                 <padding>
-                                    <Insets bottom="90.0" />
-                                 </padding>
-                              </VBox>
+                              </HBox>
+                              <HBox alignment="CENTER_RIGHT" HBox.hgrow="NEVER">
+                                 <children>
+                                    <VBox fx:id="npc3_hand" alignment="CENTER" rotate="270.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <HBox alignment="CENTER" spacing="20.0">
+                                             <children>
+                                                <ImageView fx:id="npc3_1" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fx:id="npc3_2" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fx:id="npc3_3" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fx:id="npc3_4" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fx:id="npc3_5" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                             </padding>
+                                          </HBox>
+                                          <HBox alignment="CENTER" spacing="20.0">
+                                             <children>
+                                                <ImageView fx:id="npc3_6" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fx:id="npc3_7" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fx:id="npc3_8" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fx:id="npc3_9" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <ImageView fx:id="npc3_10" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                             </padding>
+                                          </HBox>
+                                          <Label fx:id="npc3_name" alignment="CENTER" style="-fx-text-fill: linear-gradient(to top right, #ff9933 0%, #ff3300 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );">
+                                             <font>
+                                                <Font name="Dubai Medium" size="25.0" />
+                                             </font>
+                                             <textFill>
+                                                <LinearGradient endX="0.4881516587677725" endY="0.838862559241706" startX="0.5023696682464456" startY="0.12796208530805694">
+                                                   <stops>
+                                                      <Stop>
+                                                         <color>
+                                                            <Color red="0.43421053886413574" green="0.4181286692619324" blue="0.4181286692619324" />
+                                                         </color>
+                                                      </Stop>
+                                                      <Stop offset="1.0">
+                                                         <color>
+                                                            <Color red="1.0" green="0.9953703880310059" blue="0.9953703880310059" />
+                                                         </color>
+                                                      </Stop>
+                                                   </stops>
+                                                </LinearGradient>
+                                             </textFill>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_RIGHT" HBox.hgrow="NEVER">
+                        <HBox alignment="BOTTOM_CENTER" VBox.vgrow="ALWAYS">
                            <children>
-                              <VBox fx:id="npc3_hand" alignment="CENTER" rotate="270.0" HBox.hgrow="ALWAYS">
+                              <VBox alignment="BOTTOM_CENTER" HBox.hgrow="ALWAYS">
                                  <children>
                                     <HBox alignment="CENTER" spacing="20.0">
                                        <children>
-                                          <ImageView fx:id="npc3_1" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="user1" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fx:id="npc3_2" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="user2" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
+                                             </image>
+                                             <effect>
+                                                <InnerShadow choke="0.38" height="29.79" radius="16.595" width="38.59">
+                                                   <color>
+                                                      <Color red="0.8691357970237732" green="1.0" blue="0.018518518656492233" />
+                                                   </color>
+                                                </InnerShadow>
+                                             </effect>
+                                          </ImageView>
+                                          <ImageView fx:id="user3" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fx:id="npc3_3" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="user4" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fx:id="npc3_4" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                             </image>
-                                          </ImageView>
-                                          <ImageView fx:id="npc3_5" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="user5" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
@@ -527,27 +633,27 @@
                                     </HBox>
                                     <HBox alignment="CENTER" spacing="20.0">
                                        <children>
-                                          <ImageView fx:id="npc3_6" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="user6" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fx:id="npc3_7" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="user7" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fx:id="npc3_8" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="user8" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fx:id="npc3_9" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="user9" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fx:id="npc3_10" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="user10" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                              </image>
@@ -557,7 +663,7 @@
                                           <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                                        </padding>
                                     </HBox>
-                                    <Label fx:id="npc3_name" alignment="CENTER" style="-fx-text-fill: linear-gradient(to top right, #ff9933 0%, #ff3300 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );">
+                                    <Label style="-fx-text-fill: linear-gradient(to top right, #ff9933 0%, #ff3300 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );" text="TU">
                                        <font>
                                           <Font name="Dubai Medium" size="25.0" />
                                        </font>
@@ -582,201 +688,103 @@
                               </VBox>
                            </children>
                         </HBox>
-                     </children></HBox>
-                  <HBox alignment="BOTTOM_CENTER" VBox.vgrow="ALWAYS">
-                     <children>
-                        <VBox alignment="BOTTOM_CENTER" HBox.hgrow="ALWAYS">
-                           <children>
-                              <HBox alignment="CENTER" spacing="20.0">
-                                 <children>
-                                    <ImageView fx:id="user1" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="user2" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                       <effect>
-                                          <InnerShadow choke="0.38" height="29.79" radius="16.595" width="38.59">
-                                             <color>
-                                                <Color red="0.8691357970237732" green="1.0" blue="0.018518518656492233" />
-                                             </color>
-                                          </InnerShadow>
-                                       </effect>
-                                    </ImageView>
-                                    <ImageView fx:id="user3" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="user4" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="user5" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                 </padding>
-                              </HBox>
-                              <HBox alignment="CENTER" spacing="20.0">
-                                 <children>
-                                    <ImageView fx:id="user6" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="user7" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="user8" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="user9" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="user10" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
-                                       </image>
-                                    </ImageView>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                 </padding>
-                              </HBox>
-                              <Label style="-fx-text-fill: linear-gradient(to top right, #ff9933 0%, #ff3300 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );" text="TU">
-                                 <font>
-                                    <Font name="Dubai Medium" size="25.0" />
-                                 </font>
-                                 <textFill>
-                                    <LinearGradient endX="0.4881516587677725" endY="0.838862559241706" startX="0.5023696682464456" startY="0.12796208530805694">
-                                       <stops>
-                                          <Stop>
-                                             <color>
-                                                <Color red="0.43421053886413574" green="0.4181286692619324" blue="0.4181286692619324" />
-                                             </color>
-                                          </Stop>
-                                          <Stop offset="1.0">
-                                             <color>
-                                                <Color red="1.0" green="0.9953703880310059" blue="0.9953703880310059" />
-                                             </color>
-                                          </Stop>
-                                       </stops>
-                                    </LinearGradient>
-                                 </textFill>
-                              </Label>
-                           </children>
-                        </VBox>
-                     </children></HBox>
-               </children>
-            </VBox>
-            <VBox fx:id="npcChooser" alignment="CENTER" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <HBox alignment="CENTER">
-                     <children>
-                        <AnchorPane prefHeight="314.0" prefWidth="498.0">
-                           <children>
-                              <HBox alignment="CENTER" layoutY="97.0" prefHeight="100.0" prefWidth="498.0" spacing="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-                                 <children>
-                                    <CheckBox fx:id="uno" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#npcSelection" prefHeight="100.0" prefWidth="100.0">
-                                       <graphic>
-                                          <ImageView fitHeight="102.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../../../res/varie/1.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                    </CheckBox>
-                                    <CheckBox fx:id="due" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#npcSelection" prefHeight="100.0" prefWidth="100.0">
-                                       <graphic>
-                                          <ImageView fitHeight="102.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../../../res/varie/2.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </CheckBox>
-                                    <CheckBox fx:id="tre" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#npcSelection" prefHeight="100.0" prefWidth="100.0">
-                                       <graphic>
-                                          <ImageView fitHeight="102.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../../../res/varie/3.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                    </CheckBox>
-                                 </children>
-                              </HBox>
-                              <Button graphicTextGap="0.0" layoutX="187.0" layoutY="237.0" mnemonicParsing="false" onAction="#startsPlay" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 ); -fx-text-fill: black; -fx-font-family: arial;" text="Gioca">
-                                 <font>
-                                    <Font name="Arial Bold" size="12.0" />
-                                 </font>
-                              </Button>
-                              <Label layoutX="62.0" layoutY="31.0" style="-fx-text-fill: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 ); -fx-background-color: linear-gradient(to top right, #003300 33%, #000000 100%);" text="Seleziona il numero di sfidanti" AnchorPane.bottomAnchor="229.0">
-                                 <font>
-                                    <Font name="Dubai Medium" size="30.0" />
-                                 </font>
-                                 <textFill>
-                                    <LinearGradient endX="0.4881516587677725" endY="0.838862559241706" startX="0.5023696682464456" startY="0.12796208530805694">
-                                       <stops>
-                                          <Stop>
-                                             <color>
-                                                <Color red="0.43421053886413574" green="0.4181286692619324" blue="0.4181286692619324" />
-                                             </color>
-                                          </Stop>
-                                          <Stop offset="1.0">
-                                             <color>
-                                                <Color red="1.0" green="0.9953703880310059" blue="0.9953703880310059" />
-                                             </color>
-                                          </Stop>
-                                       </stops>
-                                    </LinearGradient>
-                                 </textFill>
-                              </Label>
-                           </children>
-                        </AnchorPane>
                      </children>
-                  </HBox>
+                  </VBox>
+                  <VBox fx:id="npcChooser" alignment="CENTER" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <HBox alignment="CENTER">
+                           <children>
+                              <AnchorPane prefHeight="314.0" prefWidth="498.0">
+                                 <children>
+                                    <HBox alignment="CENTER" layoutY="97.0" prefHeight="100.0" prefWidth="498.0" spacing="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                       <children>
+                                          <CheckBox fx:id="uno" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#npcSelection" prefHeight="100.0" prefWidth="100.0">
+                                             <graphic>
+                                                <ImageView fitHeight="102.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/varie/1.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                          </CheckBox>
+                                          <CheckBox fx:id="due" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#npcSelection" prefHeight="100.0" prefWidth="100.0">
+                                             <graphic>
+                                                <ImageView fitHeight="102.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/varie/2.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                             <HBox.margin>
+                                                <Insets />
+                                             </HBox.margin>
+                                          </CheckBox>
+                                          <CheckBox fx:id="tre" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#npcSelection" prefHeight="100.0" prefWidth="100.0">
+                                             <graphic>
+                                                <ImageView fitHeight="102.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../res/varie/3.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                          </CheckBox>
+                                       </children>
+                                    </HBox>
+                                    <Button graphicTextGap="0.0" layoutX="187.0" layoutY="237.0" mnemonicParsing="false" onAction="#startsPlay" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 ); -fx-text-fill: black; -fx-font-family: arial;" text="Gioca">
+                                       <font>
+                                          <Font name="Arial Bold" size="12.0" />
+                                       </font>
+                                    </Button>
+                                    <Label layoutX="62.0" layoutY="31.0" style="-fx-text-fill: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 ); -fx-background-color: linear-gradient(to top right, #003300 33%, #000000 100%);" text="Seleziona il numero di sfidanti" AnchorPane.bottomAnchor="229.0">
+                                       <font>
+                                          <Font name="Dubai Medium" size="30.0" />
+                                       </font>
+                                       <textFill>
+                                          <LinearGradient endX="0.4881516587677725" endY="0.838862559241706" startX="0.5023696682464456" startY="0.12796208530805694">
+                                             <stops>
+                                                <Stop>
+                                                   <color>
+                                                      <Color red="0.43421053886413574" green="0.4181286692619324" blue="0.4181286692619324" />
+                                                   </color>
+                                                </Stop>
+                                                <Stop offset="1.0">
+                                                   <color>
+                                                      <Color red="1.0" green="0.9953703880310059" blue="0.9953703880310059" />
+                                                   </color>
+                                                </Stop>
+                                             </stops>
+                                          </LinearGradient>
+                                       </textFill>
+                                    </Label>
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox fx:id="drawnCardContainer" alignment="BOTTOM_CENTER" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <padding>
+                        <Insets left="350.0" />
+                     </padding>
+                     <children>
+                        <ImageView fx:id="drawnCard" fitHeight="292.0" fitWidth="180.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+                           <effect>
+                              <DropShadow height="114.79" radius="42.972500000000004" width="59.1">
+                                 <color>
+                                    <Color red="0.8289473652839661" green="0.3799342215061188" blue="0.3799342215061188" />
+                                 </color>
+                              </DropShadow>
+                           </effect>
+                           <image>
+                              <Image url="@../../../res/cards/card%20back/cardBackGreen.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </VBox>
                </children>
-            </VBox>
-            <VBox fx:id="drawnCardContainer" alignment="BOTTOM_CENTER" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <padding>
-                  <Insets left="350.0" />
-               </padding>
-               <children>
-                  <ImageView fx:id="drawnCard" fitHeight="292.0" fitWidth="180.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
-                     <effect>
-                        <DropShadow height="114.79" radius="42.972500000000004" width="59.1">
-                           <color>
-                              <Color red="0.8289473652839661" green="0.3799342215061188" blue="0.3799342215061188" />
-                           </color>
-                        </DropShadow>
-                     </effect>
-                     <image>
-                        <Image url="@../../../res/cards/card%20back/cardBackGreen.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </VBox>
-         </children>
-      </AnchorPane>
+            </AnchorPane>
+         </items>
+      </SplitPane>
       <HBox fx:id="footer" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="85.0" prefWidth="600.0" spacing="60.0" style="-fx-background-color: linear-gradient(to bottom left, #009933 1%, #003300 100%);">
          <children>
             <Button fx:id="leaveButton" disable="true" graphicTextGap="0.0" mnemonicParsing="false" onAction="#leaveGame" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Abbandona" HBox.hgrow="NEVER">
@@ -789,12 +797,12 @@
                   <Font name="Arial Bold" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="drawButton" disable="true" graphicTextGap="0.0" layoutX="134.0" layoutY="10.0" mnemonicParsing="false" onAction="#playCard" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Pesca" HBox.hgrow="NEVER">
+            <Button fx:id="drawButton" disable="true" graphicTextGap="0.0" layoutX="134.0" layoutY="10.0" mnemonicParsing="false" onAction="#userPlay" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Pesca" HBox.hgrow="NEVER">
                <font>
                   <Font name="Arial Bold" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="discardButton" disable="true" graphicTextGap="0.0" mnemonicParsing="false" onAction="#discardCard" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Scarta">
+            <Button fx:id="discardButton" disable="true" graphicTextGap="0.0" mnemonicParsing="false" onAction="#discard" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Scarta">
                <font>
                   <Font name="Arial Bold" size="12.0" />
                </font>

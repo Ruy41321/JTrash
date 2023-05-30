@@ -2,6 +2,7 @@ package application.controller;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -9,17 +10,16 @@ import javax.swing.JOptionPane;
 
 import application.model.Model;
 import application.model.mazzo.Carta;
+import application.model.mazzo.Mazzo;
 import application.model.player.Player;
+import application.model.player.User;
 import application.view.View;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -32,7 +32,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class HomeController implements Initializable {
@@ -75,8 +74,6 @@ public class HomeController implements Initializable {
 	@FXML
 	private CheckBox tre;
 
-	private CheckBox selection;
-
 	@FXML
 	private VBox npcChooser;
 
@@ -104,8 +101,6 @@ public class HomeController implements Initializable {
 
 	@FXML
 	private ImageView drawnCard;
-
-	private Carta newC;
 
 	@FXML
 	private ImageView mazzo;
@@ -248,22 +243,37 @@ public class HomeController implements Initializable {
 	@FXML
 	private ImageView npc3_10;
 
+	private int currRound = 1;
+
+	private boolean trashFlag;
+
+	private CheckBox selection;
+
+	private Carta cardToPlay;
+
 	private Effect clickableEffect;
-	
-	private Image hiddenCardImage;
 
-	private ImageView[] userCards;
+	private Mano userMano;
 
-	private ImageView[] npc1Cards;
+	private Mano npc1Mano;
 
-	private ImageView[] npc2Cards;
+	private Mano npc2Mano;
 
-	private ImageView[] npc3Cards;
+	private Mano npc3Mano;
 
-	private int npcWhosPlaying = 0;
+	private Mano centerTable;
+
+	private Player currPlayer;
+
+	private Mazzo mazzoModel;
+
+	private ArrayList<Player> playersModel;
+
+	private User userModel = Model.getInstance().getUser();
 
 	/**
-	 * This is the method called when the linked view is launched, it's needed to initialize the dynamic fields 
+	 * This is the method called when the linked view is launched, it's needed to
+	 * initialize the dynamic fields
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -276,39 +286,23 @@ public class HomeController implements Initializable {
 		setClickableEffect(user2.getEffect());
 		user2.setEffect(null);
 
-		//Grouping the numerous Image of the cards on the field in arrays of Image who indicates the Hands of the player
-		ImageView[] tempUserHand = { user1, user2, user3, user4, user5, user6, user7, user8, user9, user10 };
-		this.userCards = tempUserHand;
-		ImageView[] tempNpc1Hand = { npc1_1, npc1_2, npc1_3, npc1_4, npc1_5, npc1_6, npc1_7, npc1_8, npc1_9, npc1_10 };
-		this.npc1Cards = tempNpc1Hand;
-		ImageView[] tempNpc2Hand = { npc2_1, npc2_2, npc2_3, npc2_4, npc2_5, npc2_6, npc2_7, npc2_8, npc2_9, npc2_10 };
-		this.npc2Cards = tempNpc2Hand;
-		ImageView[] tempNpc3Hand = { npc3_1, npc3_2, npc3_3, npc3_4, npc3_5, npc3_6, npc3_7, npc3_8, npc3_9, npc3_10 };
-		this.npc3Cards = tempNpc3Hand;
-		
-		hiddenCardImage = user1.getImage();
+		// Grouping the numerous Image of the cards on the field in arrays of Image who
+		// indicates the Hands of the player
+		userMano = new Mano(0, user1, user2, user3, user4, user5, user6, user7, user8, user9, user10);
+		npc1Mano = new Mano(1, npc1_1, npc1_2, npc1_3, npc1_4, npc1_5, npc1_6, npc1_7, npc1_8, npc1_9, npc1_10);
+		npc2Mano = new Mano(2, npc2_1, npc2_2, npc2_3, npc2_4, npc2_5, npc2_6, npc2_7, npc2_8, npc2_9, npc2_10);
+		npc3Mano = new Mano(3, npc3_1, npc3_2, npc3_3, npc3_4, npc3_5, npc3_6, npc3_7, npc3_8, npc3_9, npc3_10);
+		centerTable = new Mano(-1, scarti, drawnCard);
 	}
-	
-	//**********************convenience methods************************
 
-	/**
-	 * This method return the clickableEffect
-	 * 
-	 * <h1>Property Description:</h1>
-	 * This variable of type Effect contain the effect that must have a clickable card to inform the user that it's clickable.
-	 * 
-	 * @return
-	 * the Effect of a clickable card
-	 */
-	private Effect getClickableEffect() {
-		return clickableEffect;
-	}
+	// **********************convenience methods************************
 
 	/**
 	 * This method sets the clickable Effect property
 	 * 
-	 * <h1>Property Description:</h1>
-	 * This variable of type Effect contain the effect that must have a clickable card to inform the user that it's clickable.
+	 * <h1>Property Description:</h1> This variable of type Effect contain the
+	 * effect that must have a clickable card to inform the user that it's
+	 * clickable.
 	 * 
 	 * @param clickableEffect is the Effect with which sets the property
 	 */
@@ -317,19 +311,24 @@ public class HomeController implements Initializable {
 	}
 
 	/**
-	 * This method shows a String got as input in the allertBox label in the middle of the screen (above the deck) applying the Fade Transition
+	 * This method shows a String got as input in the allertBox label in the middle
+	 * of the screen (above the deck) applying the Fade Transition
 	 * 
-	 * @param text Is the String with which sets the text of the allertBox in the center
-	 * @param time Is the time the transition must go on
+	 * @param text         Is the String with which sets the text of the allertBox
+	 *                     in the center
+	 * @param time         Is the time the transition must go on
 	 * @param opacityStart Is the opacity the node starts with
-	 * @param opacityEnd Is the opacity with which the node will end
-	 * @param reverse Is a boolean needed to indicate if the transition have to disappear fading in reverse
-	 * @param onFinish Is the EventHandler with which set the OnFinished Transition Property 
+	 * @param opacityEnd   Is the opacity with which the node will end
+	 * @param reverse      Is a boolean needed to indicate if the transition have to
+	 *                     disappear fading in reverse
+	 * @param onFinish     Is the EventHandler with which set the OnFinished
+	 *                     Transition Property
 	 */
-	private void fadeEffect(String text, Duration time, double opacityStart, double opacityEnd,  boolean reverse, EventHandler<ActionEvent> onFinish) {
+	private void fadeEffect(String text, Duration time, double opacityStart, double opacityEnd, boolean reverse,
+			EventHandler<ActionEvent> onFinish) {
 		allertBox.setText(text);
 		FadeTransition fadeTransition = new FadeTransition(time, allertBox);
-		//settings
+		// settings
 		fadeTransition.setFromValue(opacityStart);
 		fadeTransition.setToValue(opacityEnd);
 		fadeTransition.setOnFinished(onFinish);
@@ -337,23 +336,28 @@ public class HomeController implements Initializable {
 			fadeTransition.setAutoReverse(true);
 			fadeTransition.setCycleCount(2);
 		}
-		//start
+		// start
 		fadeTransition.play();
 	}
-	
+
 	/**
-	 * This method shows an Object got as input in the allertBox label in the middle of the screen (above the deck) applying the Fade Transition
+	 * This method shows an Object got as input in the allertBox label in the middle
+	 * of the screen (above the deck) applying the Fade Transition
 	 * 
-	 * @param JObj Is the Object to downCast to Node and to show in the Transition
-	 * @param time Is the time the transition must go on
+	 * @param JObj         Is the Object to downCast to Node and to show in the
+	 *                     Transition
+	 * @param time         Is the time the transition must go on
 	 * @param opacityStart Is the opacity the node starts with
-	 * @param opacityEnd Is the opacity with which the node will end
-	 * @param reverse Is a boolean needed to indicate if the transition have to disappear fading in reverse
-	 * @param onFinish Is the EventHandler with which set the OnFinished Transition Property 
+	 * @param opacityEnd   Is the opacity with which the node will end
+	 * @param reverse      Is a boolean needed to indicate if the transition have to
+	 *                     disappear fading in reverse
+	 * @param onFinish     Is the EventHandler with which set the OnFinished
+	 *                     Transition Property
 	 */
-	private void fadeEffect(Object JObj, Duration time, double opacityStart, double opacityEnd,  boolean reverse, EventHandler<ActionEvent> onFinish) {
+	private void fadeEffect(Object JObj, Duration time, double opacityStart, double opacityEnd, boolean reverse,
+			EventHandler<ActionEvent> onFinish) {
 		FadeTransition fadeTransition = new FadeTransition(time, (Node) JObj);
-		//settings
+		// settings
 		fadeTransition.setFromValue(opacityStart);
 		fadeTransition.setToValue(opacityEnd);
 		fadeTransition.setOnFinished(onFinish);
@@ -361,12 +365,14 @@ public class HomeController implements Initializable {
 			fadeTransition.setAutoReverse(true);
 			fadeTransition.setCycleCount(2);
 		}
-		//start
+		// start
 		fadeTransition.play();
 	}
-	
+
 	/**
-	 * This method returns the ImageView of the player card on the position got as parameter
+	 * This method returns the ImageView of the player card on the position got as
+	 * parameter
+	 * 
 	 * @param position The position of the card to return
 	 * @return the ImageView of the card on the specified position
 	 */
@@ -388,60 +394,108 @@ public class HomeController implements Initializable {
 	}
 
 	/**
-	 * This method apply to the Node got in input an effect to inform that it can be clicked
-	 * and the EventHandler also got as parameter if the boolean got is true,
-	 *  else it set the effect and the event to null
-	 * @param JObj Is the node on which set the effect
-	 * @param isClickable Is a boolean to know if apply or delete the effect
+	 * This method apply to the Node got in input an effect to inform that it can be
+	 * clicked and the EventHandler also got as parameter if the boolean got is
+	 * true, else it set the effect and the event to null
+	 * 
+	 * @param JObj         Is the node on which set the effect
+	 * @param isClickable  Is a boolean to know if apply or delete the effect
 	 * @param onMouseClick is the EventHandler to set as onMouseClick Action
 	 */
 	private void setClickableEffect(Node JObj, boolean isClickable, EventHandler<MouseEvent> onMouseClick) {
-		if(isClickable) {
+		if (isClickable) {
 			JObj.setEffect(clickableEffect);
 			JObj.setOnMouseClicked(onMouseClick);
-		}else {
+		} else {
 			JObj.setEffect(null);
 			JObj.setOnMouseClicked(null);
 		}
 	}
+	
+	
 
 	/**
 	 * This method apply the clickableEffect on all cards that are still Hidden
 	 */
-	private void applyClickableEffectToAllHidenCards() {
-		for (int i = 0; i < Model.getInstance().getUser().getCardNumber(); i++) {
-			if (Model.getInstance().getUser().cardIsHidden(i)) {
+	private void applyClickableEffectToAllHiddenCards() {
+		for (int i = 0; i < userModel.getCardNumber(); i++) {
+			if (userModel.cardIsHidden(i)) {
 				ImageView card = getCardViewByPosition(String.valueOf(i + 1));
 				setClickableEffect(card, true, this::switchCard);
 			}
 		}
 	}
-	
-	/**
-	 * This method able the User to play fading in that is his turn
-	 */
-	private void switchToUserTurn() {
-		fadeEffect(username.getText() + " è il tuo turno !!!", Duration.seconds(2), 0, 1, true, null);
-		drawButton.setDisable(false);
-	}
-	
-	// ****************************top bar and menu actions***************************
 
 	/**
-	 * This Method refresh the view of the top Bar containing the player's info like the counts of the games and the level
+	 * This method pass the turn to the next player in the anti hour sense, starting
+	 * with the user
+	 */
+	private void passToNextTurn() {
+		if (Model.getInstance().getFollowingPlayer(currPlayer).getTrashStatus()) // if it's his turn and has trashed all
+																					// the other played the last turn
+		{
+			nextRound();
+			return;
+		}
+		currPlayer = Model.getInstance().getFollowingPlayer(currPlayer);
+		/*
+		 * the fadeEffect has to be set with the eventHandler to able the drawButton if
+		 * it's the turn of user or to call the automatic playing methods
+		 * (showCardToPlay and after it npcPlay) for npc
+		 */
+		EventHandler<ActionEvent> actionAfterShowName = (currPlayer instanceof User) ? event -> {
+			drawButton.setDisable(false);
+		} : /* else */ event -> {
+			showCardToPlay(event2 -> {
+				npcPlay();
+			});
+		};
+		fadeEffect("E' il turno di: " + currPlayer.getName(), Duration.seconds(1), 0, 1, true, actionAfterShowName);
+	}
+
+	private void nextRound() {
+		trashFlag = false;
+		fadeEffect("Round n." + (++currRound), Duration.seconds(2), 0, 1, true, event -> {
+			Model.getInstance().distributeCards();
+			passToNextTurn();
+		});
+	}
+
+	/**
+	 * This method return the array of ImageView that represent the hand of a player
+	 * 
+	 * @param p Is the player which will back the hand
+	 * @return an ImageView[] who has the instance of the single cards of the player
+	 */
+	private ImageView[] getHandImages(Player p) {
+		if (p == playersModel.get(0))
+			return userMano.getMano();
+		if (p == playersModel.get(1))
+			return npc1Mano.getMano();
+		if (p == playersModel.get(2))
+			return npc2Mano.getMano();
+		else
+			return npc3Mano.getMano();
+	}
+
+	// *************top bar and menu actions*******************
+
+	/**
+	 * This Method refresh the view of the top Bar containing the player's info like
+	 * the counts of the games and the level
 	 */
 	private void updateStatsMenu() {
-		String avatarPath = Model.getInstance().getUser().getAvatar();
-		int nTot = Model.getInstance().getUser().getpTot();
-		int nVinte = Model.getInstance().getUser().getVinte();
-		int nPerse = Model.getInstance().getUser().getPerse();
-		float lvlCompleto = Model.getInstance().getUser().getLivello();
+		String avatarPath = userModel.getAvatar();
+		int nTot = userModel.getpTot();
+		int nVinte = userModel.getVinte();
+		int nPerse = userModel.getPerse();
+		float lvlCompleto = userModel.getLivello();
 		int lvlAttuale = ((int) lvlCompleto == 0) ? 1 : (int) lvlCompleto;
 		float expMancante = lvlCompleto - lvlAttuale;
 		int lvlNext = lvlAttuale + 1;
 
 		avatar.setImage(new Image("file:" + avatarPath));
-		username.setText(Model.getInstance().getUser().getName());
+		username.setText(userModel.getName());
 		totali.setText("Partite Totali: " + nTot);
 		vinte.setText("Vinte: " + nVinte);
 		perse.setText("Perse: " + nPerse);
@@ -449,10 +503,10 @@ public class HomeController implements Initializable {
 		lvlSucc.setText("" + lvlNext);
 		lvlBar.setProgress(expMancante);
 	}
-	
+
 	/**
-	 * This method opens an file picker windows to permit the user to select an image to set as avatar.
-	 * Only png and jpeg images are allowed
+	 * This method opens an file picker windows to permit the user to select an
+	 * image to set as avatar. Only png and jpeg images are allowed
 	 */
 	public void changeAvatar() {
 		FileChooser fc = new FileChooser();
@@ -460,18 +514,17 @@ public class HomeController implements Initializable {
 		File f = fc.showOpenDialog(null);
 
 		if (f != null) {
-			Model.getInstance().getUser().setAvatar(f.getAbsolutePath());
+			userModel.setAvatar(f.getAbsolutePath());
 			reloadAvatar();
-			Model.getInstance().getUser().save();
+			userModel.save();
 		}
-
 	}
 
 	/**
 	 * This method refresh the view of the avatar of the user
 	 */
 	private void reloadAvatar() {
-		String avatarPath = Model.getInstance().getUser().getAvatar();
+		String avatarPath = userModel.getAvatar();
 		avatar.setImage(new Image("file:" + avatarPath));
 	}
 
@@ -479,145 +532,153 @@ public class HomeController implements Initializable {
 	 * This method terminates the execution of the application saving first
 	 */
 	public void chiudiTutto() {
-		Model.getInstance().getUser().save();
+		userModel.save();
 		System.exit(0);
 	}
 
 	/**
-	 * This method log out the user going back in the login window saving and resetting the model first
+	 * This method log out the user going back in the login window saving and
+	 * resetting the model first
 	 */
 	public void disconnect() {
-		Model.getInstance().getUser().save();
+		userModel.save();
 		Model.reset();
 		View.getInstance().changeScene("Login.fxml");
 	}
 
 	/**
-	 * This method delete the user's account going back in the login window resetting the model first
+	 * This method delete the user's account going back in the login window
+	 * resetting the model first
 	 */
 	public void deleteProfile() {
-		Model.getInstance().getUser().delete();
+		userModel.delete();
 		Model.reset();
 		View.getInstance().changeScene("Login.fxml");
 	}
 
-	//********************bottom bar actions************************
-	
+	// ********************bottom bar actions************************
+
 	/**
-	 * This method delete the ongoing game considering the player loser so update his statistics and switch back to the npc selector view.
+	 * This method delete the ongoing game considering the player loser so update
+	 * his statistics and switch back to the npc selector view.
 	 */
 	public void leaveGame() {
-		int choose = JOptionPane.showConfirmDialog(null,
-				"Stai per abbandonare la partita,\n quest'ultima verrà considerata come persa,\n desideri continuare?",
+		int choose = JOptionPane.showConfirmDialog(null, "Stai per abbandonare la partita,\ndesideri continuare?",
 				"Abbandona", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 		if (choose == JOptionPane.OK_OPTION) {
-			Model.getInstance().updateUserStats(false);
 			Model.getInstance().resetGame();
-			leaveButton.setDisable(true);
-			gameField.setVisible(false);
-			drawnCardContainer.setVisible(false);
-			npcChooser.setVisible(true);
-			updateStatsMenu();
-			
-			//resets the view of the cards on the table
-			scarti.setImage(null);
-			for (ImageView img : userCards)
-				img.setImage(hiddenCardImage);
-			for (ImageView img : npc1Cards)
-				img.setImage(hiddenCardImage);
-			for (ImageView img : npc2Cards)
-				img.setImage(hiddenCardImage);
-			for (ImageView img : npc3Cards)
-				img.setImage(hiddenCardImage);
+			Model.getInstance().updateUserStats(playersModel.get(0).checkWin());
+			View.getInstance().changeScene("Home.fxml");
 		}
 	}
-	
+
 	/**
 	 * to upload: manage the user trash action
 	 */
 	public void sayTrash() {
-		fadeEffect(username.getText() + " dice Trash !!!", Duration.seconds(2), 0, 1, true, event -> {
-			npcsStartPlay();
-		});
 		trashButton.setDisable(true);
+		discard();
+		fadeEffect(currPlayer.getName() + " dice Trash !!!", Duration.seconds(2), 0, 1, true, event -> {
+			if (currPlayer.checkWin()) {
+				fadeEffect(currPlayer.getName().toUpperCase() + " HAI VINTO !!!", Duration.seconds(2), 0, 1, false,
+						event3 -> {
+							JOptionPane.showMessageDialog(null,
+									"La partita è finita, grazie per aver giocato", "Partita conclusa",
+									JOptionPane.INFORMATION_MESSAGE);
+
+							Model.getInstance().resetGame();
+							Model.getInstance().updateUserStats(playersModel.get(0).checkWin());
+							View.getInstance().changeScene("Home.fxml");
+
+						});
+			} else if (!trashFlag) {
+				trashFlag = true;
+				fadeEffect("Avete un ultimo turno a testa !", Duration.seconds(1), 0, 1, true, event2 -> {
+					passToNextTurn();
+				});
+			} else
+				passToNextTurn();
+		});
 	}
-	
+
 	/**
-	 * This method discard the current unswitchable card on the table which can be the just drawn card or the switched one,
-	 * and after to have discarded it invoke the method to allow the npcs to start to play
+	 * This method discard the current card on the table which can be the just drawn
+	 * card or the switched one, and after to have discarded it
 	 */
-	public void discardCard() {
-		Model.getInstance().getMazzo().discard(newC);
-		updateDiscardPile();
-		newC = null;
+	public void discard() {
+		mazzoModel.discard(mazzoModel.getCardToPlay());
+		mazzoModel.setCardToPlay(null);
 		drawnCardContainer.setVisible(false);
 		discardButton.setDisable(true);
-
-		npcsStartPlay();
 	}
-	
-	// *****************main game logic method************************
-	
+
 	/**
-	 * This method works when the checks box to choose the number of npc are selected, the method remove the selection on the 
-	 * other checks box and set the variable selection = the clicked check box
+	 * This is the discard method invoked by clicking on the discard button so from
+	 * the user
+	 * 
+	 * @param e ActionEvent
+	 */
+	public void discard(ActionEvent e) {
+		discard();
+		passToNextTurn();
+	}
+
+	// *****************main game logic method************************
+
+	/**
+	 * This method works when the checks box to choose the number of npc are
+	 * selected, the method remove the selection on the other checks box and set the
+	 * variable selection = the clicked check box
+	 * 
 	 * @param e Is the Node who invoked the event/method
 	 */
 	public void npcSelection(ActionEvent e) {
 		due.setSelected(false);
 		uno.setSelected(false);
 		tre.setSelected(false);
-		
+
 		selection = (CheckBox) e.getSource();
 		selection.setSelected(true);
 	}
-	
-	/**
-	 * This method update the view of the discard pile showing the last discarded card
-	 */
-	private void updateDiscardPile() {
-		Carta scarto = Model.getInstance().getMazzo().getLastDiscard();
-		String seme = scarto.getSeme().toEnglishString();
-		String valore = scarto.getValore().toEnglishStringValue();
-		scarti.setImage(
-				new Image("file:../../res/cards/" + seme.toLowerCase() + "/card" + seme + "_" + valore + ".png"));
-	}
 
 	/**
-	 * This method starts the game: using the selection property it works only if a number of npc is selected.
-	 * Then depending on the number of npc choose it sets visible the hands of the npc
-	 * Then initialize the Model with this number
-	 * Then says to the Model to distribute the cards
-	 * Then witch the view from the npc selection to the game table
-	 * In the end able the player to play
+	 * This method starts the game: using the selection property it works only if a
+	 * number of npc is selected. Then depending on the number of npc choose it sets
+	 * visible the hands of the npc Then initialize the Model with this number Then
+	 * says to the Model to distribute the cards Then witch the view from the npc
+	 * selection to the game table In the end able the player to play
 	 */
+	@SuppressWarnings("deprecation")
 	public void startsPlay() {
 		if (selection == null)
 			return;
 		switch (selection.getId()) {
 		case "uno": {
-			Model.getInstance().setPlayers(1);
-			Model.getInstance().setMazzo(1);
-			npc1_name.setText(Model.getInstance().getPlayers()[1].getName());
+			initModelVar(1);
+			npc1_name.setText(playersModel.get(1).getName());
+			playersModel.get(1).getMano().addObserver(npc1Mano);
 			npc2_hand.setVisible(false);
 			npc3_hand.setVisible(false);
 			break;
 		}
 		case "due": {
-			Model.getInstance().setPlayers(2);
-			Model.getInstance().setMazzo(2);
-			npc1_name.setText(Model.getInstance().getPlayers()[1].getName());
-			npc2_name.setText(Model.getInstance().getPlayers()[2].getName());
+			initModelVar(2);
+			npc1_name.setText(playersModel.get(1).getName());
+			playersModel.get(1).getMano().addObserver(npc1Mano);
+			npc2_name.setText(playersModel.get(2).getName());
+			playersModel.get(2).getMano().addObserver(npc2Mano);
 			npc2_hand.setVisible(true);
 			npc3_hand.setVisible(false);
 			break;
 		}
 		case "tre": {
-			Model.getInstance().setPlayers(3);
-			Model.getInstance().setMazzo(3);
-			npc1_name.setText(Model.getInstance().getPlayers()[1].getName());
-			npc2_name.setText(Model.getInstance().getPlayers()[2].getName());
-			npc3_name.setText(Model.getInstance().getPlayers()[3].getName());
+			initModelVar(3);
+			npc1_name.setText(playersModel.get(1).getName());
+			playersModel.get(1).getMano().addObserver(npc1Mano);
+			npc2_name.setText(playersModel.get(2).getName());
+			playersModel.get(2).getMano().addObserver(npc2Mano);
+			npc3_name.setText(playersModel.get(3).getName());
+			playersModel.get(3).getMano().addObserver(npc3Mano);
 			npc2_hand.setVisible(true);
 			npc3_hand.setVisible(true);
 			break;
@@ -625,258 +686,165 @@ public class HomeController implements Initializable {
 		default:
 			break;
 		}
-
+		playersModel.get(0).getMano().addObserver(userMano);
+		mazzoModel.addObserver(centerTable);
 		Model.getInstance().distributeCards();
-		updateDiscardPile();
 
 		npcChooser.setVisible(false);
 		gameField.setVisible(true);
 
 		leaveButton.setDisable(false);
 
-		switchToUserTurn();
+		passToNextTurn();
 
 	}
 
 	/**
+	 * This method initialize the array of player and the deck in the Model
 	 * 
+	 * @param n is the number of npc
 	 */
-	public void playCard() {
-		Model.getInstance().checkIfMazzoHasNext();
-		if (newC == null)
-			newC = Model.getInstance().getMazzo().next(); // draws the cards if not present
-		String seme = newC.getSeme().toEnglishString();
-		String valore = newC.getValore().toEnglishStringValue();
-		drawnCard.setImage(
-				new Image("file:../../res/cards/" + seme.toLowerCase() + "/card" + seme + "_" + valore + ".png"));
-		drawnCardContainer.setVisible(true);
-		fadeEffect(drawnCard, Duration.seconds(1), 0, 1, false, null);
+	private void initModelVar(int n) {
+		Model.getInstance().setPlayers(n);
+		Model.getInstance().setMazzo(n);
+		mazzoModel = Model.getInstance().getMazzo();
+		playersModel = Model.getInstance().getPlayers();
+	}
 
-		// da implementare tutti i controlli per gestire le figure e le carte gia
-		// piazzate
-		if (Model.getInstance().getUser().cardIsOut(newC)) {
-			// case when the card is bigger than 10 or than the player remaining cards number
+	/**
+	 * This method show in the view the image of the current card to play. The card
+	 * is drawn if not present (it's present if is a card switched)
+	 * 
+	 * @param afterFading is the Event to run on the finish of the fade effect
+	 */
+	public void showCardToPlay(EventHandler<ActionEvent> afterFading) {
+		Model.getInstance().checkIfMazzoHasNext();
+
+		if (mazzoModel.getCardToPlay() == null)
+			mazzoModel.setCardToPlay(mazzoModel.next()); // draws the cards if not present
+
+		drawnCard.setOpacity(0);
+		drawnCardContainer.setVisible(true);
+		fadeEffect(drawnCard, Duration.seconds(1), 0, 1, false, afterFading);
+	}
+
+	/**
+	 * This method is invoked by the user in the view when he/she draws a card. The
+	 * method invoke the method to show the current card to play and allow the user
+	 * to choose the card to switch
+	 */
+	public void userPlay() {
+		showCardToPlay(null);
+		cardToPlay = mazzoModel.getCardToPlay();
+		if (userModel.cardIsOut(cardToPlay)) {
+			// case when the card is bigger than 10 or than the player remaining cards
+			// number
 			discardButton.setDisable(false);
 		} else {
-			if (Model.getInstance().getUser().cardIsJolly(newC)) {
+			if (userModel.cardIsJolly(cardToPlay)) {
 				// case when the card is King or Jolly
-				applyClickableEffectToAllHidenCards();
-			} else if (!Model.getInstance().getUser().cardIsHidden(newC)) {
+				applyClickableEffectToAllHiddenCards();
+			} else if (!userModel.cardIsHidden(cardToPlay)) {
 				// case when the card to replace is already replaced
 				discardButton.setDisable(false);
 			} else {
 				// case when the card is a number and the card to replace is still hidden
-				setClickableEffect(getCardViewByPosition(valore), true, this::switchCard);
+				setClickableEffect(getCardViewByPosition(cardToPlay.getValore().toCardValue()), true, this::switchCard);
 			}
 		}
 		drawButton.setDisable(true);
 	}
 
-	
+	/**
+	 * This method switch the current card on the table(newC) with the clicked
+	 * ImageView then it let the user turn go over
+	 * 
+	 * @param cardClicked Is the MouseEvent object on which the event has been
+	 *                    invoked that is always an ImageView
+	 */
+	private void switchCard(MouseEvent cardClicked) {
+		ImageView card = (ImageView) cardClicked.getSource(); // This method is called only by ImageView Nodes
 
-	private void switchCard(MouseEvent event) {
-		if (event.getSource() instanceof ImageView == false) 
-			System.exit(2);
-		ImageView card = (ImageView) event.getSource();
-		
-		// switch in the model
-		newC = Model.getInstance().getUser().changeCard(newC, Integer.parseInt(card.getId().substring(4)) - 1).clone();
-		Model.getInstance().getUser().setTrashStatus();
-		// switch in the view
-		card.setImage(drawnCard.getImage());
-		drawnCardContainer.setVisible(false);
+		// switch in the model and in the view with the observer Observable
+		mazzoModel.setCardToPlay(
+				currPlayer.changeCard(mazzoModel.getCardToPlay(), Integer.parseInt(card.getId().substring(4)) - 1));
+		//drawnCardContainer.setVisible(false);
 
-		for (ImageView img : userCards) {
-			setClickableEffect(img, false, null);
-		}
+		userMano.removeClickableEffects();
 
 		// checks if Trash
-		if (Model.getInstance().getUser().getTrashStatus()) {
-			drawButton.setDisable(true);
+		if (userModel.getTrashStatus()) {
+			// drawButton.setDisable(true);
 			trashButton.setDisable(false);
 			return;
 		}
-		playCard(); // play with the returned card of the switching
+		userPlay(); // play with the returned card of the switching
 	}
 
-	//***********************main game logic method**********************
-	//*****************************npc actions***************************
-	
-	private void npcSwitchCard(Player npc, ImageView[] npcHand) {
+	// ***********************main game logic method**********************
+	// *****************************npc actions***************************
+
+	/**
+	 * This method checks if the card to play is switchable with one of the npc, if
+	 * it can be switched it invoke the method to switch the cards else it discard
+	 * it and pass the turn
+	 * 
+	 * @param npc Is the current npc playing
+	 */
+	private void npcPlay() {
+		cardToPlay = mazzoModel.getCardToPlay();
+		if (currPlayer.cardIsOut(cardToPlay)) {
+			// case when the card is bigger than 10 or the player remaining cards number
+			discard();
+			passToNextTurn();
+		} else {
+			if (currPlayer.cardIsJolly(cardToPlay)) {
+				// case when the card is King or Jolly
+				npcSwitchCard();
+			} else if (!currPlayer.cardIsHidden(cardToPlay)) {
+				// case when the card to replace is already replaced
+				discard();
+				passToNextTurn();
+				return;
+			} else {
+				// case when the card is a number and it's still hidden
+				npcSwitchCard();
+			}
+
+			if (!currPlayer.getTrashStatus()) // it continue to to invoke itSelf method until do trash or discard
+				showCardToPlay(event -> {
+					npcPlay();
+				});
+			else
+				sayTrash();
+		}
+	}
+
+	/**
+	 * This method switch the current card on the table (to play) with a card in the
+	 * hand of the npc picking it randomly for jolly or king
+	 */
+	private void npcSwitchCard() {
 		ImageView card;
+		cardToPlay = mazzoModel.getCardToPlay();
 		try {
-			card = npcHand[newC.getV()];
+			card = getHandImages(currPlayer)[cardToPlay.getV()];
 		} catch (ArrayIndexOutOfBoundsException e) {
 			// If there is this Exception means the drawn card was a King or Jolly
 			int pos;
 			do {
-				pos = rand.nextInt(npc.getCardNumber()); // Picking a random number to choose with which card switch the
-															// drawn one
-			} while (!npc.getCardFromHand(pos).getHidenStatus()); // repeating the random picking until it choose an
-																	// hidden card
-			card = npcHand[pos];
+				pos = rand.nextInt(currPlayer.getCardNumber()); // Picking a random number to choose with which card
+																// switch the
+				// drawn one
+			} while (!currPlayer.getCardFromHand(pos).getHidenStatus()); // repeating the random picking until it choose
+																			// an
+			// hidden card
+			card = getHandImages(currPlayer)[pos];
 		}
 
-		// switch in the model
-		newC = npc.changeCard(newC, Integer.parseInt(card.getId().substring(5)) - 1).clone();
-		npc.setTrashStatus();
-		// switch in the view
-		card.setImage(drawnCard.getImage());
-		drawnCardContainer.setVisible(false);
-
-		// checks if Trash
-		if (npc.getTrashStatus()) {
-			fadeEffect(npc.getName() + " dice Trash !!!", Duration.seconds(2), 0, 1, true, null);
-		}
+		// switch in the model and in the view with the observer Observable
+		mazzoModel.setCardToPlay(currPlayer.changeCard(cardToPlay, Integer.parseInt(card.getId().substring(5)) - 1));
+		//drawnCardContainer.setVisible(false);
 	}
-
-
-	private void npcDiscardsCard() {
-		Model.getInstance().getMazzo().discard(newC);
-		updateDiscardPile();
-		newC = null;
-		drawnCardContainer.setVisible(false);
-	}
-
-	/**
-	 * This Method manage the turns of the npcs to permit to play in the anti-hour sense
-	 */
-	private void npcsStartPlay() {
-		//npc2 if it's present plays
-		if (npc2_hand.isVisible()) {
-			allertBox.setText("E' il turno di: " + Model.getInstance().getPlayers()[2].getName());
-			showNpcTurnFading(allertBox, Duration.seconds(1), Model.getInstance().getPlayers()[2], npc2Cards);
-			
-			//npcPlay(Model.getInstance().getPlayers()[2], npc2Cards);
-		}else {
-		//npc1 which is always present plays
-			allertBox.setText("E' il turno di: " + Model.getInstance().getPlayers()[1].getName());
-			showNpcTurnFading(allertBox, Duration.seconds(1), Model.getInstance().getPlayers()[1], npc1Cards);
-		}
-		
-		//npcPlay(Model.getInstance().getPlayers()[1], npc1Cards);
-		/*
-		//npc3 if it's present plays
-		if (npc3_hand.isVisible()){
-			allertBox.setText("E' il turno di: " + Model.getInstance().getPlayers()[3].getName());
-			showNpcTurnFading(allertBox, Duration.seconds(2), Model.getInstance().getPlayers()[3], npc3Cards);
-			
-			//npcPlay(Model.getInstance().getPlayers()[3], npc3Cards);
-		}
-		//allow the user to play printing that is his turn
-		drawButton.setDisable(false);
-		allertBox.setText(username.getText() + " è il tuo turno");
-		fadeIn(allertBox, Duration.seconds(2), true);
-		*/
-	}
-
-	private void showNpcTurnFading(Object JObj, Duration delay, Player npc, ImageView[] hand) {
-		npcWhosPlaying++;
-		FadeTransition fadeTransition = new FadeTransition(delay, (Node) JObj);
-		fadeTransition.setFromValue(0);
-		fadeTransition.setToValue(1);
-		fadeTransition.setOnFinished(event -> {
-			FadeTransition fadeTransition2 = new FadeTransition(delay, (Node) JObj);
-			fadeTransition2.setFromValue(1);
-			fadeTransition2.setToValue(0);
-			fadeTransition2.setOnFinished(e -> {
-				npcShowCardToPlay(Duration.seconds(1), npc, hand);
-			});
-			fadeTransition2.play();
-		});
-		fadeTransition.play();
-	}
-	
-	private void npcShowCardToPlay(Duration delay, Player npc, ImageView[] hand) {
-		Model.getInstance().checkIfMazzoHasNext();
-		if (newC == null)
-			newC = Model.getInstance().getMazzo().next(); // draws the cards if not present
-		String seme = newC.getSeme().toEnglishString();
-		String valore = newC.getValore().toEnglishStringValue();
-		drawnCard.setImage(
-				new Image("file:../../res/cards/" + seme.toLowerCase() + "/card" + seme + "_" + valore + ".png"));
-		drawnCard.setOpacity(0);
-		drawnCardContainer.setVisible(true);
-		FadeTransition fadeTransition = new FadeTransition(delay, drawnCard);
-		fadeTransition.setFromValue(0);
-		fadeTransition.setToValue(1);
-		fadeTransition.setOnFinished(event -> {
-			npcPlay(npc, hand);
-			
-		});
-		fadeTransition.play();
-	}
-
-	private void npcPlay(Player npc, ImageView[] npcHand) {
-		/*Model.getInstance().checkIfMazzoHasNext();
-		if (newC == null)
-			newC = Model.getInstance().getMazzo().next(); // draws the cards if not present
-		String seme = newC.getSeme().toEnglishString();
-		String valore = newC.getValore().toEnglishStringValue();
-		drawnCard.setImage(
-				new Image("file:../../res/cards/" + seme.toLowerCase() + "/card" + seme + "_" + valore + ".png"));
-		drawnCardContainer.setVisible(true);
-
-		//while (!isTransitionFinished);
-		isTransitionFinished = false;
-		fadeIn(drawnCardContainer, Duration.seconds(1), false);
-		//while (!isTransitionFinished);
-		isTransitionFinished = false;
-*/
-		if (npc.cardIsOut(newC)) {
-			// case when the card is bigger than 10 or the player remaining cards number
-			npcDiscardsCard();
-
-			if (npcWhosPlaying == 1 && npc2_hand.isVisible()) {
-			//	npcWhosPlaying ++;
-				allertBox.setText("E' il turno di: " + Model.getInstance().getPlayers()[1].getName());
-				showNpcTurnFading(allertBox, Duration.seconds(1), Model.getInstance().getPlayers()[1], npc1Cards);
-			}else if (npcWhosPlaying == 2 && npc3_hand.isVisible()) {
-			//	npcWhosPlaying ++;
-				allertBox.setText("E' il turno di: " + Model.getInstance().getPlayers()[3].getName());
-				showNpcTurnFading(allertBox, Duration.seconds(1), Model.getInstance().getPlayers()[3], npc3Cards);
-			}else if (npcWhosPlaying == 1 && !npc2_hand.isVisible()) {
-				npcWhosPlaying = 0;
-				;
-			}else if (npcWhosPlaying == 3) {
-				npcWhosPlaying = 0;
-				switchToUserTurn();
-			}
-			return;
-		} else {
-			if (npc.cardIsJolly(newC)) {
-				// case when the card is King or Jolly
-				npcSwitchCard(npc, npcHand);
-			} else if (!npc.cardIsHidden(newC)) {
-				// case when the card to replace is already replaced
-				npcDiscardsCard();
-				if (npcWhosPlaying == 1 && npc2_hand.isVisible()) {
-					//	npcWhosPlaying ++;
-						allertBox.setText("E' il turno di: " + Model.getInstance().getPlayers()[1].getName());
-						showNpcTurnFading(allertBox, Duration.seconds(1), Model.getInstance().getPlayers()[1], npc1Cards);
-					}else if (npcWhosPlaying == 2 && npc3_hand.isVisible()) {
-					//	npcWhosPlaying ++;
-						allertBox.setText("E' il turno di: " + Model.getInstance().getPlayers()[3].getName());
-						showNpcTurnFading(allertBox, Duration.seconds(1), Model.getInstance().getPlayers()[3], npc3Cards);
-					}else if (npcWhosPlaying == 1 && !npc2_hand.isVisible()) {
-						npcWhosPlaying = 0;
-						switchToUserTurn();
-					}else if (npcWhosPlaying == 2 && !npc3_hand.isVisible()) {
-						npcWhosPlaying = 0;
-						switchToUserTurn();
-					}else if (npcWhosPlaying == 3) {
-						npcWhosPlaying = 0;
-						switchToUserTurn();
-					}
-				return;
-			} else {
-				// case when the card is a number and it's still hidden
-				npcSwitchCard(npc, npcHand);
-			}
-		}
-		if (!npc.getTrashStatus()) //it continue to to invoke itSelf method until the npc do trash or discard
-			npcShowCardToPlay(Duration.seconds(1), npc, npcHand);
-	}
-
 
 }

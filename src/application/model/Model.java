@@ -1,5 +1,6 @@
 package application.model;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import application.model.mazzo.Carta;
@@ -29,7 +30,7 @@ public class Model {
 	/**
 	 * Array used to manage all the player who are playing
 	 */
-	private Player[] players;
+	private ArrayList<Player> players;
 
 	/**
 	 * Constructor using the user who's playing
@@ -83,7 +84,7 @@ public class Model {
 		instance = null;
 		Npc.resetRandomNameGenerator();
 	}
-	
+
 	public void resetGame() {
 		players = null;
 		mazzo = null;
@@ -103,26 +104,28 @@ public class Model {
 																// like the merge of 2 standard decks
 	}
 
-	public Player[] getPlayers() {
+	public ArrayList<Player> getPlayers() {
 		return players;
 	}
 
 	public void setPlayers(int numOfNpc) {
-		this.players = new Player[numOfNpc + 1];// Creating an array of player who contains the Player's instances of
-												// size(number of Npc + one user)
-		players[0] = u; // Setting the User in the first field
+		this.players = new ArrayList<Player>(numOfNpc + 1);// Creating an array of player who contains the Player's
+															// instances of
+		// size(number of Npc + one user)
+		players.add(u); // Setting the User in the first field
 		for (int i = 1; i < numOfNpc + 1; i++)
-			players[i] = new Npc(players[0].getName()); // Setting the following fields for the Npc
+			players.add(new Npc(players.get(0).getName())); // Setting the following fields for the Npc
 	}
 
 	public void updateUserStats(boolean hasWin) {
 		u.endGame(hasWin);
 	}
-	
+
 	public void checkIfMazzoHasNext() {
 		if (!mazzo.hasNext()) // If the deck is over continue using the mixed discard pile
 			mazzo.mixScarti();
 	}
+
 	/**
 	 * This is the main body of the game, it permit to sign up/log in and to play.
 	 * <p>
@@ -131,7 +134,7 @@ public class Model {
 	 *
 	 * @param args no needed
 	 */
-	public void main(String[] args) {
+	public void mainAsConsoleProgram() {
 
 		boolean trasherFlag; // Flag to know if someone has done trash
 
@@ -144,17 +147,16 @@ public class Model {
 				trasherFlag = false;
 				// Starting the turn for each player
 				for (Player pl : players) {
-					
 
 					phase2(pl); // The Player plays
 
 					if (pl.checkWin()) { // Check if the current player won
-						if (players[0].checkWin()) { // Check if the current player who has won is the User
-							((User) players[0]).endGame(true);
+						if (players.get(0).checkWin()) { // Check if the current player who has won is the User
+							((User) players.get(0)).endGame(true);
 							System.exit(0);
 						}
 						System.out.println("Ha vinto il giocatore: " + pl.getName());
-						((User) players[0]).endGame(false);
+						((User) players.get(0)).endGame(false);
 						System.exit(0);
 					}
 					if (pl.getTrashStatus()) { // Check if the current Player has done trash
@@ -170,12 +172,12 @@ public class Model {
 							phase2(pLeft);
 
 							if (pLeft.checkWin()) {
-								if (players[0].checkWin()) {
-									((User) players[0]).endGame(true);
+								if (players.get(0).checkWin()) {
+									((User) players.get(0)).endGame(true);
 									System.exit(0);
 								}
 								System.out.println("Ha vinto il giocatore: " + pLeft.getName());
-								((User) players[0]).endGame(false);
+								((User) players.get(0)).endGame(false);
 								System.exit(0);
 							}
 							if (pLeft.getTrashStatus())
@@ -189,8 +191,9 @@ public class Model {
 	}
 
 	/**
-	 * The distributeCards method is the starting phase of the game, in this phase the
-	 * players get the card for their starting hand and set the TrashStatus on false
+	 * The distributeCards method is the starting phase of the game, in this phase
+	 * the players get the card for their starting hand and set the TrashStatus on
+	 * false
 	 *
 	 */
 	public void distributeCards() {
@@ -217,12 +220,12 @@ public class Model {
 	 */
 	private void phase2(Player pl) {
 		checkIfMazzoHasNext();
-		
+
 		System.out.println("E' il turno di: " + pl.getName());
 		Carta newC = mazzo.next(); // drawing the card
 		while (!pl.getTrashStatus()) { // the turn goes on until there is a break condition or someone has trashed
 
-			pl.stampMano();
+			//pl.stampMano();
 			Carta prima = newC.clone();
 			newC = pl.play(newC);
 			if (newC == null) {
@@ -236,6 +239,13 @@ public class Model {
 			System.out.println(pl.getName() + " dice Trash");
 		}
 
+	}
+
+	public Player getFollowingPlayer(Player currPlayer) {
+		int i = players.indexOf(currPlayer);
+		return (i == 0 && players.size() > 2) ? players.get(2)
+				: (i == 0 || i == 2) ? players.get(1)
+						: (i == 1 && players.size() > 3) ? players.get(3) : players.get(0);
 	}
 
 }

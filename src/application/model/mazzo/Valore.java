@@ -4,7 +4,15 @@ package application.model.mazzo;
 public enum Valore {
 	Asso, Due, Tre, Quattro, Cinque, Sei, Sette, Otto, Nove, Dieci, Jack, Queen, King, Joker;
 	
-	public String toEnglishStringValue() {
+	/**
+	 * Method used to get the number/character of the card as String
+	 * <p>
+	 * <h1>Example: Valore -> Return </h1>
+	 * Due -> 2, Jack -> J
+	 * </p>
+	 * @return String value 
+	 */
+	public String toCardValue() {
 		return switch(name()) {
 			case "Asso" -> "A";
 			case "Due" -> "2";

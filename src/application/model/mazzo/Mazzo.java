@@ -1,16 +1,20 @@
 package application.model.mazzo;
 
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.Random;
 
 /** Class which represent the deck used to play the game */
-public class Mazzo {
+@SuppressWarnings("deprecation")
+public class Mazzo extends Observable {
 	/** Array to represent the whole deck */
 	private ArrayList<Carta> mazzo;
 	/** Array to represent the main (used) deck to give cards to the players */
 	private ArrayList<Carta> main;
 	/** Array to represent the discard pile */
 	private ArrayList<Carta> scarti = new ArrayList<>();
+	/** The current card on the table that the player has to switch */
+	private Carta cardToPlay;
 	/** Pointer to know the handle the deck */
 	private int p = 0;
 
@@ -130,6 +134,7 @@ public class Mazzo {
 		}
 		p = 0;
 		scarti.clear();
+		hideAll(mazzo);
 		setMain(mazzo);
 	}
 
@@ -164,6 +169,7 @@ public class Mazzo {
 			}
 		}
 		p = 0;
+		hideAll(scarti);
 		setMain(scarti);
 		scarti.clear();
 
@@ -211,5 +217,33 @@ public class Mazzo {
 	 */
 	public void discard(Carta c) {
 		scarti.add(c);
+		setChanged();
+		notifyObservers(0);
+	}
+
+	/**
+	 * getter of cardToPlay
+	 * @return cardToPlay
+	 */
+	public Carta getCardToPlay() {
+		return cardToPlay;
+	}
+
+	/**
+	 * setter of cardToPlay
+	 * @param cardToPlay
+	 */
+	public void setCardToPlay(Carta cardToPlay) {
+		this.cardToPlay = cardToPlay;
+		if(cardToPlay != null)
+			this.cardToPlay.changeStatus();
+		setChanged();
+		notifyObservers(1);
+	}
+
+	public void hideAll(ArrayList<Carta> deck) {
+		 for (Carta c: deck)
+				//if the cards were shown re set'em to hidden
+				if(!c.getHidenStatus()) c.changeStatus();
 	}
 }

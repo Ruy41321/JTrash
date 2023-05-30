@@ -11,8 +11,8 @@ public abstract class Player implements playable {
 
 	/** Nick of the player */
 	private String name;
-	/** Hand of the player (array of him cards) */
-	private Carta[] mano;
+	/** Hand of the player */
+	private transient Mano mano;
 	/** variable to know how many card the player deserve */
 	private int cardNumber = 10;
 	/** flag used to know if the player has done Trash */
@@ -25,6 +25,7 @@ public abstract class Player implements playable {
 	 */
 	public Player(String name) {
 		this.name = name;
+		this.mano = new Mano();
 	}
 
 	/**
@@ -33,11 +34,15 @@ public abstract class Player implements playable {
 	 * @param c is The array of Carta generate from mazzo
 	 */
 	public void setMano(Carta[] c) {
-		mano = new Carta[c.length];
-		int i = 0;
-		for (Carta c1 : c) {
-			mano[i++] = c1.clone();
-		}
+		mano.setMano(c);
+	}
+
+	/**
+	 * Getter of the mano
+	 * @return the mano
+	 */
+	public Mano getMano() {
+		return mano;
 	}
 
 	/**
@@ -50,24 +55,13 @@ public abstract class Player implements playable {
 	}
 
 	/**
-	 * Method used to stamp the entire mano as string representation of each single
-	 * card
-	 */
-	public void stampMano() {
-		System.out.println();
-		for (Carta c : mano) {
-			c.stamp();
-		}
-	}
-
-	/**
 	 * Method to get a single card of from the hand
 	 *
 	 * @param i the index of mano for the card to return
 	 * @return the card who correspond to the index given
 	 */
 	public Carta getCardFromHand(int i) {
-		return mano[i];
+		return mano.get(i);
 	}
 
 	/**
@@ -78,9 +72,9 @@ public abstract class Player implements playable {
 	 * @return the card got
 	 */
 	public Carta changeCard(Carta newC, int i) {
-		Carta temp = mano[i].clone();
-		mano[i] = newC.clone();
-		mano[i].changeStatus();
+		Carta temp = mano.get(i).clone();
+		mano.switchCard(i, newC.clone());
+		setTrashStatus();
 		return temp;
 	}
 
@@ -133,19 +127,38 @@ public abstract class Player implements playable {
 		return false;
 	}
 	
-
+	/**
+	 * This method checks if the card is playable
+	 * @param card Is the card to check
+	 * @return true when the card is bigger than the player remaining cards number but not a jolly or king
+	 */
 	public boolean cardIsOut(Carta card) {
 		return (getCardNumber() - 1 < card.getV() && card.getV() < 12); // The case where he draws a card but doesn't have the position to place it
 	}
 	
+	/**
+	 * This method checks if the card is playable
+	 * @param card Is the card to check
+	 * @return true when the card is Hidden
+	 */
 	public boolean cardIsHidden(Carta card) {
 		return getCardFromHand(card.getV()).getHidenStatus();
 	}
 	
+	/**
+	 * This method checks if the card is playable
+	 * @param index Is the index of the card to check
+	 * @return true when the card is Hidden
+	 */
 	public boolean cardIsHidden(int index) {
 		return getCardFromHand(index).getHidenStatus();
 	}
 	
+	/**
+	 * This method checks if the card is playable
+	 * @param card Is the card to check
+	 * @return true when the card is a jolly or king
+	 */
 	public boolean cardIsJolly(Carta card) {
 		return !(card.getV() < 12);
 	}
