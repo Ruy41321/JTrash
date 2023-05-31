@@ -87,6 +87,7 @@ public class Model {
 
 	public void resetGame() {
 		players = null;
+		u.setCardNumber(10);
 		mazzo = null;
 		Npc.resetRandomNameGenerator();
 	}

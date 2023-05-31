@@ -77,7 +77,7 @@ public class Carta implements Cloneable {
 	 *
 	 * @return true if Hidden
 	 */
-	public boolean getHidenStatus() {
+	public boolean getHiddenStatus() {
 		return hiddenStatus;
 	}
 

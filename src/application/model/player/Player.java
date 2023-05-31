@@ -86,7 +86,7 @@ public abstract class Player implements playable {
 	 */
 	private boolean checkTrash() {
 		for (Carta c : mano) {
-			if (c.getHidenStatus())
+			if (c.getHiddenStatus())
 				return false;
 		}
 		cardNumber--;
@@ -115,6 +115,14 @@ public abstract class Player implements playable {
 	public int getCardNumber() {
 		return cardNumber;
 	}
+	
+	/**
+	 * Setter of the card number
+	 * @param i the value to set on card number
+	 */
+	public void setCardNumber(int i) {
+		cardNumber = i;
+	}
 
 	/**
 	 * Checks if the player won checking if his cardNumber is 0
@@ -142,7 +150,7 @@ public abstract class Player implements playable {
 	 * @return true when the card is Hidden
 	 */
 	public boolean cardIsHidden(Carta card) {
-		return getCardFromHand(card.getV()).getHidenStatus();
+		return getCardFromHand(card.getV()).getHiddenStatus();
 	}
 	
 	/**
@@ -151,7 +159,7 @@ public abstract class Player implements playable {
 	 * @return true when the card is Hidden
 	 */
 	public boolean cardIsHidden(int index) {
-		return getCardFromHand(index).getHidenStatus();
+		return getCardFromHand(index).getHiddenStatus();
 	}
 	
 	/**

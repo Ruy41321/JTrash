@@ -1,7 +1,9 @@
-package application.controller;
+package application.view;
 
+import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.stream.Stream;
 
 import application.model.Model;
 import application.model.mazzo.Carta;
@@ -14,7 +16,7 @@ public class Mano implements Observer {
 	private int playerIndex;
 	private int size;
 	private ImageView[] mano;
-	public static final String HiddenPath = "file:../../res/cards/card back/cardBackRed.png";
+	private static final String HiddenPath = "/cards/card back/cardBackRed.png";
 
 	/**
 	 * This method return the relative path of a card got in input. The path is set
@@ -25,11 +27,11 @@ public class Mano implements Observer {
 	 */
 	public static final String getCardPath(Carta card) {
 		try {
-			if (card.getHidenStatus())
+			if (card.getHiddenStatus())
 				return HiddenPath;
 			String seme = card.getSeme().toEnglishString();
 			String valore = card.getValore().toCardValue();
-			return "file:../../res/cards/" + seme.toLowerCase() + "/card" + seme + "_" + valore + ".png";
+			return "/cards/" + seme.toLowerCase() + "/card" + seme + "_" + valore + ".png";
 		} catch (NullPointerException e) {
 			return HiddenPath;
 		}
@@ -40,7 +42,7 @@ public class Mano implements Observer {
 	 * 
 	 * @param playerIndex is an index to understand the owner of the mano or if it's
 	 *                    the center of the table (discard and card to play)
-	 * @param mano is the array of ImageView that the class manage
+	 * @param mano        is the array of ImageView that the class manage
 	 */
 	public Mano(int playerIndex, ImageView... mano) {
 		this.mano = mano;
@@ -50,10 +52,10 @@ public class Mano implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		if(playerIndex != -1)
+		if (playerIndex != -1)
 			size = Model.getInstance().getPlayers().get(playerIndex).getMano().getSize();
 		if (size != mano.length) {
-			for (int i = size; i<mano.length; i++)
+			for (int i = size; i < mano.length; i++)
 				mano[i].setVisible(false);
 		}
 		if (arg != null)
@@ -73,7 +75,12 @@ public class Mano implements Observer {
 		Carta card = (playerIndex != -1) ? Model.getInstance().getPlayers().get(playerIndex).getMano().get(i)
 				: (i == 0) ? Model.getInstance().getMazzo().getLastDiscard()
 						: Model.getInstance().getMazzo().getCardToPlay();
-		mano[i].setImage(new Image(getCardPath(card)));
+		if (card == null)
+			mano[i].setVisible(false);
+		else {
+			mano[i].setImage(new Image(getClass().getResource(getCardPath(card)).toString()));
+			mano[i].setVisible(true);
+		}
 	}
 
 	/**
@@ -102,6 +109,13 @@ public class Mano implements Observer {
 			card.setOnMouseClicked(null);
 			card.setEffect(null);
 		}
+	}
+	
+	/**
+	 * convert the object in stream of ImageView with the elements of the field "mano"
+	 */
+	public Stream<ImageView> toStream() {
+		return Arrays.stream(mano);
 	}
 
 }

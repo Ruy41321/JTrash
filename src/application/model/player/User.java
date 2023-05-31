@@ -231,7 +231,7 @@ public class User extends Player {
 					// The user choose where to place the card until he choose an hidden card
 					System.out.println("Scegli dove posizionare la carta");
 					pos = in.nextInt();
-				} while (!getCardFromHand(pos - 1).getHidenStatus());
+				} while (!getCardFromHand(pos - 1).getHiddenStatus());
 				card = changeCard(card, pos - 1).clone();
 			}
 		}
@@ -400,5 +400,4 @@ public class User extends Player {
 		}
 		return null;
 	}
-
 }

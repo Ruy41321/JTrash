@@ -244,6 +244,6 @@ public class Mazzo extends Observable {
 	public void hideAll(ArrayList<Carta> deck) {
 		 for (Carta c: deck)
 				//if the cards were shown re set'em to hidden
-				if(!c.getHidenStatus()) c.changeStatus();
+				if(!c.getHiddenStatus()) c.changeStatus();
 	}
 }

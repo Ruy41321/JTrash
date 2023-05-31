@@ -22,7 +22,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" prefWidth="1280.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.HomeController">
+<VBox alignment="TOP_CENTER" prefWidth="1280.0" stylesheets="@css/Sheet1.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.HomeController">
   <children>
       <AnchorPane style="-fx-background-color: linear-gradient(to bottom left, #009933 1%, #003300 100%);" VBox.vgrow="NEVER">
          <children>
@@ -98,7 +98,7 @@
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#changeAvatar">
                      <graphic>
-                        <Button graphicTextGap="0.0" mnemonicParsing="false" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Cambia Avatar">
+                        <Button graphicTextGap="0.0" mnemonicParsing="false" styleClass="menuButton" text="Cambia Avatar">
                            <font>
                               <Font name="Arial Bold" size="12.0" />
                            </font>
@@ -107,7 +107,7 @@
                   </MenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#deleteProfile">
                      <graphic>
-                        <Button graphicTextGap="0.0" mnemonicParsing="false" style="-fx-background-color: linear-gradient(to right, #ff3300 0%, #ff9999 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );" text="Elimina Profilo">
+                        <Button graphicTextGap="0.0" mnemonicParsing="false" styleClass="menuButton2" text="Elimina Profilo">
                            <font>
                               <Font name="Arial Bold" size="12.0" />
                            </font>
@@ -121,7 +121,7 @@
                   </SeparatorMenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#disconnect">
                      <graphic>
-                        <Button graphicTextGap="0.0" mnemonicParsing="false" style="-fx-background-color: linear-gradient(to right, #ff3300 0%, #ff9999 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );" text="Disconnect" textFill="WHITE">
+                        <Button graphicTextGap="0.0" mnemonicParsing="false" styleClass="menuButton2" text="Disconnect" textFill="WHITE">
                            <font>
                               <Font name="Arial Bold" size="12.0" />
                            </font>
@@ -130,7 +130,7 @@
                   </MenuItem>
                   <MenuItem onAction="#chiudiTutto">
                      <graphic>
-                        <Button alignment="CENTER" contentDisplay="RIGHT" graphicTextGap="0.0" mnemonicParsing="false" style="-fx-background-color: linear-gradient(to right, #ff3300 0%, #ff9999 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );" text="Chiudi" textFill="WHITE">
+                        <Button alignment="CENTER" contentDisplay="RIGHT" graphicTextGap="0.0" mnemonicParsing="false" styleClass="menuButton2" text="Chiudi" textFill="WHITE">
                            <font>
                               <Font name="Arial Bold" size="12.0" />
                            </font>
@@ -252,7 +252,7 @@
       </AnchorPane>
       <SplitPane VBox.vgrow="ALWAYS">
          <items>
-            <AnchorPane minHeight="0.0" styleClass="background" stylesheets="@css/Login.css">
+            <AnchorPane minHeight="0.0" styleClass="background">
                <children>
                   <VBox fx:id="gameField" alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
@@ -471,7 +471,7 @@
                                           </Label>
                                           <HBox alignment="CENTER" spacing="20.0" VBox.vgrow="ALWAYS">
                                              <children>
-                                                <ImageView fx:id="mazzo" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                <ImageView fx:id="mazzoView" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
                                                       <Image url="@../../../res/cards/card%20back/cardBackRed.png" />
                                                    </image>
@@ -762,7 +762,7 @@
                         </HBox>
                      </children>
                   </VBox>
-                  <VBox fx:id="drawnCardContainer" alignment="BOTTOM_CENTER" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <VBox fx:id="drawnCardContainer" alignment="BOTTOM_CENTER" visible="false" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <padding>
                         <Insets left="350.0" />
                      </padding>
@@ -787,22 +787,22 @@
       </SplitPane>
       <HBox fx:id="footer" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="85.0" prefWidth="600.0" spacing="60.0" style="-fx-background-color: linear-gradient(to bottom left, #009933 1%, #003300 100%);">
          <children>
-            <Button fx:id="leaveButton" disable="true" graphicTextGap="0.0" mnemonicParsing="false" onAction="#leaveGame" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Abbandona" HBox.hgrow="NEVER">
+            <Button fx:id="leaveButton" disable="true" graphicTextGap="0.0" mnemonicParsing="false" onAction="#leaveGame" prefHeight="43.0" prefWidth="124.0" styleClass="menuButton" text="Abbandona" HBox.hgrow="NEVER">
                <font>
                   <Font name="Arial Bold" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="trashButton" disable="true" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#sayTrash" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Trash" HBox.hgrow="NEVER">
+            <Button fx:id="trashButton" disable="true" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#sayTrash" prefHeight="43.0" prefWidth="124.0" styleClass="menuButton" text="Trash" HBox.hgrow="NEVER">
                <font>
                   <Font name="Arial Bold" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="drawButton" disable="true" graphicTextGap="0.0" layoutX="134.0" layoutY="10.0" mnemonicParsing="false" onAction="#userPlay" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Pesca" HBox.hgrow="NEVER">
+            <Button fx:id="drawButton" disable="true" graphicTextGap="0.0" layoutX="134.0" layoutY="10.0" mnemonicParsing="false" onAction="#userPlay" prefHeight="43.0" prefWidth="124.0" styleClass="menuButton" text="Pesca" HBox.hgrow="NEVER">
                <font>
                   <Font name="Arial Bold" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="discardButton" disable="true" graphicTextGap="0.0" mnemonicParsing="false" onAction="#discard" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: linear-gradient(to bottom left, #009999 0%, #ffffff 100%); -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );;" text="Scarta">
+            <Button fx:id="discardButton" disable="true" graphicTextGap="0.0" mnemonicParsing="false" onAction="#discard" prefHeight="43.0" prefWidth="124.0" styleClass="menuButton" text="Scarta">
                <font>
                   <Font name="Arial Bold" size="12.0" />
                </font>
