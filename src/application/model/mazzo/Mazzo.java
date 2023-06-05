@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Random;
 
+import application.model.ClassNotInstancedException;
+import application.model.player.Player;
+
 /** Class which represent the deck used to play the game */
 @SuppressWarnings("deprecation")
 public class Mazzo extends Observable {
@@ -15,8 +18,22 @@ public class Mazzo extends Observable {
 	private ArrayList<Carta> scarti = new ArrayList<>();
 	/** The current card on the table that the player has to switch */
 	private Carta cardToPlay;
-	/** Pointer to know the handle the deck */
-	private int p = 0;
+	/** Pointer to handle the deck */
+	private int pos = 0;
+
+	public static Mazzo instance;
+
+	public static Mazzo getInstance() {
+		try {
+			if (instance == null)
+				throw new ClassNotInstancedException(
+						"There is no current instance of Mazzo, to get an instance you have to set it first with the method setMazzo()");
+		} catch (ClassNotInstancedException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		return instance;
+	}
 
 	/**
 	 * Constructor for a deck of 54*n cards
@@ -29,6 +46,7 @@ public class Mazzo extends Observable {
 			mazzo.addAll(new Mazzo().mazzo);
 
 		setMain(mazzo);
+		instance = this;
 	}
 
 	/** Constructor for a deck of 54 cards */
@@ -43,6 +61,7 @@ public class Mazzo extends Observable {
 		mazzo.add(new Carta(Seme.Rosso, Valore.Joker));
 		mazzo.add(new Carta(Seme.Nero, Valore.Joker));
 		setMain(mazzo);
+		instance = this;
 	}
 
 	/**
@@ -62,10 +81,25 @@ public class Mazzo extends Observable {
 	public void stamp() {
 		for (Carta carta : mazzo) {
 			carta.changeStatus();
-			carta.stamp();
+			System.out.println(carta.toString());
 			carta.changeStatus();
 			System.out.println();
 		}
+	}
+
+	/**
+	 * The distributeCards method is the starting phase of the game, in this phase
+	 * the players get the card for their starting hand and set the TrashStatus on
+	 * false
+	 *
+	 */
+	public void distributeCards(ArrayList<Player> players) {
+		mix(); // Mix the deck
+		players.forEach(pl -> {
+			pl.setMano(getMano(pl.getCardNumber()));
+			pl.setTrashStatus();
+		});
+		discard(next());
 	}
 
 	/**
@@ -132,15 +166,16 @@ public class Mazzo extends Observable {
 				indexMixed[i] = rand;
 			}
 		}
-		p = 0;
+		pos = 0;
 		scarti.clear();
 		hideAll(mazzo);
 		setMain(mazzo);
 	}
 
 	/**
-	 * Method used to mix the discard pile 5 times, set it as main deck, clear the
-	 * discard pile array and reset the pointer
+	 * Method used only when there isn't a next card to mix the discard pile 5
+	 * times, set it as main deck, clear the discard pile array and reset the
+	 * pointer
 	 * <p>
 	 * Precisely it generate a Random number who represent the position of the card
 	 * to switch with current card of the iteration, switch them and add the
@@ -149,7 +184,9 @@ public class Mazzo extends Observable {
 	 * from a previous one to get a more accurate mix
 	 * </p>
 	 */
-	public void mixScarti() {
+	public void mixScartiIfNecessary() {
+		if (hasNext())
+			return;
 		for (int z = 0; z < 5; z++) {
 			Random r = new Random();
 			int[] nMixed = new int[scarti.size()];
@@ -168,19 +205,20 @@ public class Mazzo extends Observable {
 				nMixed[i] = rand;
 			}
 		}
-		p = 0;
+		pos = 0;
 		hideAll(scarti);
 		setMain(scarti);
 		scarti.clear();
 
 	}
+
 	/**
 	 * Method to get the last discarded card
 	 *
 	 * @return the card at the top of the discard stack
 	 */
 	public Carta getLastDiscard() {
-		return scarti.get(scarti.size()-1);
+		return scarti.get(scarti.size() - 1);
 	}
 
 	/**
@@ -189,7 +227,7 @@ public class Mazzo extends Observable {
 	 * @return the number of remaining cards
 	 */
 	public int getRimanenti() {
-		return main.size() - p;
+		return main.size() - pos;
 	}
 
 	/**
@@ -207,7 +245,7 @@ public class Mazzo extends Observable {
 	 * @return the next card
 	 */
 	public Carta next() {
-		return main.get(p++);
+		return main.get(pos++);
 	}
 
 	/**
@@ -223,6 +261,7 @@ public class Mazzo extends Observable {
 
 	/**
 	 * getter of cardToPlay
+	 * 
 	 * @return cardToPlay
 	 */
 	public Carta getCardToPlay() {
@@ -231,19 +270,21 @@ public class Mazzo extends Observable {
 
 	/**
 	 * setter of cardToPlay
+	 * 
 	 * @param cardToPlay
 	 */
 	public void setCardToPlay(Carta cardToPlay) {
 		this.cardToPlay = cardToPlay;
-		if(cardToPlay != null)
+		if (cardToPlay != null)
 			this.cardToPlay.changeStatus();
 		setChanged();
 		notifyObservers(1);
 	}
 
 	public void hideAll(ArrayList<Carta> deck) {
-		 for (Carta c: deck)
-				//if the cards were shown re set'em to hidden
-				if(!c.getHiddenStatus()) c.changeStatus();
+		for (Carta c : deck)
+			// if the cards were shown re set'em to hidden
+			if (!c.getHiddenStatus())
+				c.changeStatus();
 	}
 }

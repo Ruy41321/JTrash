@@ -3,7 +3,7 @@ package application.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import application.model.Model;
+import application.model.player.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -38,7 +38,6 @@ public class LoginController implements Initializable{
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		Model.reset();
 		errorEffect = username.getEffect();
 		username.setEffect(null);
 	}
@@ -79,7 +78,7 @@ public class LoginController implements Initializable{
 	 * @param event
 	 */
 	public void doLogin(ActionEvent event){
-		if(Model.login(username.getText(), password.getText()) != null){
+		if(User.login(username.getText(), password.getText()) != null){
 			JTrash.changeScene("/application/view/Home.fxml", true, true);
 		}else
 		{
@@ -106,7 +105,7 @@ public class LoginController implements Initializable{
 		else if(password.getText().length() < 4) {
 			setError("Password non valida, minimo 4 caratteri", 2);
 		}
-		else if(Model.signup(username.getText(), password.getText())){
+		else if(User.signup(username.getText(), password.getText())){
 			doLogin(event);
 		}else{
 			setError("Riprovare: Username già registrato", 1);

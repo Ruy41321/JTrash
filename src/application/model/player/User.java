@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 
+import application.model.ClassNotInstancedException;
 import application.model.mazzo.Carta;
 
 /**
@@ -44,6 +45,20 @@ public class User extends Player {
 	/** Path of the user's profile image */
 	@Expose
 	private String avatar;
+	
+	private static User instance;
+	
+	public static User getInstance() {
+		try {
+			if (instance == null)
+				throw new ClassNotInstancedException(
+						"There is no current instance of User, to get an instance you have to login first");
+		} catch (ClassNotInstancedException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		return instance;
+	}
 
 	/**
 	 * Create a new User from the parameter given, this constructor is used for the
@@ -66,6 +81,7 @@ public class User extends Player {
 		this.pTot = pTot;
 		this.livello = livello;
 		this.avatar = avatar;
+		instance = this;
 	}
 
 	/**
@@ -83,6 +99,7 @@ public class User extends Player {
 		this.pTot = u.pTot;
 		this.livello = u.livello;
 		this.avatar = u.avatar;
+		instance = this;
 	}
 
 	@Override
@@ -282,7 +299,7 @@ public class User extends Player {
 	 */
 	public boolean save() {
 		try {
-			File file = new File("bin/application/model/player/db/" + nick + ".json");
+			File file = new File("bin/users/" + nick + ".json");
 			// if the file already exist means the nick is already taken
 			if (!file.exists()) {
 				System.out.println("Errore: File in cui salvare non trovato");
@@ -314,7 +331,7 @@ public class User extends Player {
 	 * @return true if works, false if it encounter an error
 	 */
 	public boolean delete() {
-		File file = new File("bin/application/model/player/db/" + nick + ".json");
+		File file = new File("bin/users/" + nick + ".json");
 		// if the file already exist means the nick is already taken
 		if (file.delete()) {
 			System.out.println("Elimazione eseguita");
@@ -331,14 +348,16 @@ public class User extends Player {
 	 **/
 	public static boolean signup(String nick, String pass) {
 		try {
-			File file = new File("bin/application/model/player/db/" + nick + ".json");
+			File file = new File("bin/users/" + nick + ".json");
 			// if the file already exist means the nick is already taken
+
+			System.out.println(file.getAbsolutePath());
 			if (file.exists())
 				System.out.println("Nick non disponibile");
 			else if (file.createNewFile()) { // creating the file
 				// setting to default the Users statistics
 				int perse = 0, vinte = 0, pTot = 0, livello = 1;
-				String avatar = "res/varie/avatar.png";
+				String avatar = "bin/varie/avatar.png";
 
 				// Initializing the Objects to write on files
 				BufferedWriter bw = new BufferedWriter(new FileWriter(file));
@@ -368,7 +387,7 @@ public class User extends Player {
 	 */
 	public static User login(String nick, String pass) {
 		try {
-			File file = new File("bin/application/model/player/db/" + nick + ".json");
+			File file = new File("bin/users/" + nick + ".json");
 			// I go over only if the file exist
 			if (!file.exists())
 				System.out.println("Nick non registrato");

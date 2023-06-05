@@ -3,15 +3,15 @@ package application.controller;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 
-import application.model.Model;
+//import application.model.Model;
 import application.model.mazzo.Carta;
 import application.model.mazzo.Mazzo;
+import application.model.player.Npc;
 import application.model.player.Player;
 import application.model.player.User;
 import application.view.Mano;
@@ -250,8 +250,6 @@ public class HomeController implements Initializable {
 
 	private CheckBox selection;
 
-	private Carta cardToPlay;
-
 	private Effect clickableEffect;
 
 	private Mano userMano;
@@ -270,7 +268,17 @@ public class HomeController implements Initializable {
 
 	private ArrayList<Player> players;
 
-	private User user = Model.getInstance().getUser();
+	private User user = User.getInstance();
+	
+	public static HomeController instance;
+	
+	public static HomeController getInstance() {
+		return instance;
+	}
+	
+	public HomeController() {
+		instance = this;
+	}
 
 	/**
 	 * This is the method called when the linked view is launched, it's needed to
@@ -294,8 +302,36 @@ public class HomeController implements Initializable {
 		npc3Mano = new Mano(3, npc3_1, npc3_2, npc3_3, npc3_4, npc3_5, npc3_6, npc3_7, npc3_8, npc3_9, npc3_10);
 		centerTable = new Mano(-1, scarti, drawnCard);
 	}
+	
+	public void resetGame() {
+		user.endGame(user.checkWin());
+		user.setCardNumber(10);
+		Npc.resetRandomNameGenerator();
+	}
 
 	// **********************convenience methods************************
+
+	public void setPlayers(int numOfNpc) {
+		this.players = new ArrayList<Player>(numOfNpc + 1);// Creating an array of player who contains the Player's
+															// instances of
+		// size(number of Npc + one user)
+		players.add(user); // Setting the User in the first field
+		for (int i = 1; i < numOfNpc + 1; i++)
+			players.add(new Npc(players.get(0).getName())); // Setting the following fields for the Npc
+	}
+
+	public void setMazzo(int numOfNpc) {
+		mazzo = (numOfNpc == 1) ? new Mazzo() : new Mazzo(2);// Generate a deck of 54 cards if true, else of 108 cards
+																// like the merge of 2 standard decks
+	}
+	
+	public Mazzo getMazzo() {
+		return mazzo;
+	}
+
+	public ArrayList<Player> getPlayers() {
+		return players;
+	}
 
 	/**
 	 * This method returns the number of the card by his ImageView's Id
@@ -432,6 +468,17 @@ public class HomeController implements Initializable {
 			setCardClickable(cardImage, true, this::switchCard);
 		});
 	}
+	
+	/**
+	 * This method return the next player available in anti hour sense
+	 * @return the next player respect the current player
+	 */
+	public Player getFollowingPlayer() {
+		int i = players.indexOf(currPlayer);
+		return (i == 0 && players.size() > 2) ? players.get(2)
+				: (i == 0 || i == 2) ? players.get(1)
+						: (i == 1 && players.size() > 3) ? players.get(3) : players.get(0);
+	}
 
 	/**
 	 * This method starts the turn for the following player showing that it's his
@@ -440,13 +487,13 @@ public class HomeController implements Initializable {
 	 * who has already trashed it pass to the next round
 	 */
 	private void passToNextTurn() {
-		if (Model.getInstance().getFollowingPlayer(currPlayer).getTrashStatus()) // if it's his turn and has trashed all
+		if (getFollowingPlayer().getTrashStatus()) // if it's his turn and has trashed all
 																					// the other played the last turn
 		{
 			nextRound();
 			return;
 		}
-		currPlayer = Model.getInstance().getFollowingPlayer(currPlayer);
+		currPlayer = getFollowingPlayer();
 		/*
 		 * the fadeEffect has to be set with the eventHandler to able the drawButton if
 		 * it's the turn of user or to call the automatic playing methods
@@ -469,7 +516,7 @@ public class HomeController implements Initializable {
 	private void nextRound() {
 		trashFlag = false;
 		fadeEffect("Round n." + (++currRound), Duration.seconds(2), 0, 1, true, event -> {
-			Model.getInstance().distributeCards();
+			Mazzo.getInstance().distributeCards(players);
 			passToNextTurn();
 		});
 	}
@@ -550,7 +597,7 @@ public class HomeController implements Initializable {
 	 */
 	public void disconnect() {
 		user.save();
-		Model.reset();
+		Npc.resetRandomNameGenerator();
 		JTrash.changeScene("/application/view/Login.fxml", false, false);
 	}
 
@@ -560,7 +607,7 @@ public class HomeController implements Initializable {
 	 */
 	public void deleteProfile() {
 		user.delete();
-		Model.reset();
+		Npc.resetRandomNameGenerator();
 		JTrash.changeScene("/application/view/Login.fxml", false, false);
 	}
 
@@ -575,8 +622,7 @@ public class HomeController implements Initializable {
 				"Abbandona", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
 		if (choose == JOptionPane.OK_OPTION) {
-			Model.getInstance().resetGame();
-			Model.getInstance().updateUserStats(players.get(0).checkWin());
+			resetGame();
 			JTrash.changeScene("/application/view/Home.fxml", true, true);
 		}
 	}
@@ -596,9 +642,7 @@ public class HomeController implements Initializable {
 						event3 -> {
 							JOptionPane.showMessageDialog(null, "La partita è finita, grazie per aver giocato",
 									"Partita conclusa", JOptionPane.INFORMATION_MESSAGE);
-
-							Model.getInstance().resetGame();
-							Model.getInstance().updateUserStats(players.get(0).checkWin());
+							resetGame();
 							JTrash.changeScene("/application/view/Home.fxml", true, true);
 
 						});
@@ -666,18 +710,18 @@ public class HomeController implements Initializable {
 		npc3_hand.setVisible(false);
 		switch (selection.getId()) {
 		case "uno": {
-			initModelVar(1);
+			setGame(1);
 			break;
 		}
 		case "due": {
-			initModelVar(2);
+			setGame(2);
 			npc2_name.setText(players.get(2).getName());
 			players.get(2).getMano().addObserver(npc2Mano);
 			npc2_hand.setVisible(true);
 			break;
 		}
 		case "tre": {
-			initModelVar(3);
+			setGame(3);
 			npc2_name.setText(players.get(2).getName());
 			players.get(2).getMano().addObserver(npc2Mano);
 			npc3_name.setText(players.get(3).getName());
@@ -694,7 +738,7 @@ public class HomeController implements Initializable {
 		players.get(1).getMano().addObserver(npc1Mano);
 		mazzo.addObserver(centerTable);
 
-		Model.getInstance().distributeCards();
+		mazzo.distributeCards(players);
 
 		npcChooser.setVisible(false);
 		gameField.setVisible(true);
@@ -707,15 +751,13 @@ public class HomeController implements Initializable {
 	}
 
 	/**
-	 * This method initialize the array of player and the deck in the Model
+	 * This method initialize the array of player and the deck
 	 * 
 	 * @param n is the number of npc
 	 */
-	private void initModelVar(int n) {
-		Model.getInstance().setPlayers(n);
-		Model.getInstance().setMazzo(n);
-		mazzo = Model.getInstance().getMazzo();
-		players = Model.getInstance().getPlayers();
+	private void setGame(int n) {
+		setPlayers(n);
+		setMazzo(n);
 	}
 
 	/**
@@ -725,7 +767,7 @@ public class HomeController implements Initializable {
 	 * @param afterFading is the Event to run on the finish of the fade effect
 	 */
 	public void showCardToPlay(EventHandler<ActionEvent> afterFading) {
-		Model.getInstance().checkIfMazzoHasNext();
+		mazzo.mixScartiIfNecessary();
 
 		if (mazzo.getCardToPlay() == null)
 			mazzo.setCardToPlay(mazzo.next()); // draws the cards if not present
@@ -741,7 +783,7 @@ public class HomeController implements Initializable {
 	 */
 	public void userPlay() {
 		showCardToPlay(null);
-		cardToPlay = mazzo.getCardToPlay();
+		Carta cardToPlay = mazzo.getCardToPlay();
 		if (user.cardIsOut(cardToPlay)) {
 			// case when the card is bigger than 10 or than the player remaining cards
 			// number
@@ -796,7 +838,7 @@ public class HomeController implements Initializable {
 	 * @param npc Is the current npc playing
 	 */
 	private void npcPlay() {
-		cardToPlay = mazzo.getCardToPlay();
+		Carta cardToPlay = mazzo.getCardToPlay();
 		if (currPlayer.cardIsOut(cardToPlay)) {
 			// case when the card is bigger than 10 or the player remaining cards number
 			discard();
@@ -830,7 +872,7 @@ public class HomeController implements Initializable {
 	 */
 	private void npcSwitchCard() {
 		ImageView card;
-		cardToPlay = mazzo.getCardToPlay();
+		Carta cardToPlay = mazzo.getCardToPlay();
 		try {
 			card = getHandImages(currPlayer)[cardToPlay.getV()];
 		} catch (ArrayIndexOutOfBoundsException e) {

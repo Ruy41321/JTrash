@@ -54,17 +54,6 @@ public class Carta implements Cloneable {
 	public Valore getValore() {
 		return v;
 	}
-	
-	/**
-	 * Method to stamp the String representation of the card if it's shown or
-	 * "Nascosta" if hidden
-	 */
-	public void stamp() {
-		if (hiddenStatus)
-			System.out.println("Nascosta");
-		else
-			System.out.println(toString());
-	}
 
 	/** @return e.g. "Quattro Fiori" */
 	@Override

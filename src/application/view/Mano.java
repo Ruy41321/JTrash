@@ -5,7 +5,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.stream.Stream;
 
-import application.model.Model;
+import application.controller.HomeController;
 import application.model.mazzo.Carta;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -53,7 +53,7 @@ public class Mano implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		if (playerIndex != -1)
-			size = Model.getInstance().getPlayers().get(playerIndex).getMano().getSize();
+			size = HomeController.getInstance().getPlayers().get(playerIndex).getMano().getSize();
 		if (size != mano.length) {
 			for (int i = size; i < mano.length; i++)
 				mano[i].setVisible(false);
@@ -72,9 +72,9 @@ public class Mano implements Observer {
 	 *          needed to understand if refresh the cardToPlay or the discardPile
 	 */
 	public void refreshCard(int i) {
-		Carta card = (playerIndex != -1) ? Model.getInstance().getPlayers().get(playerIndex).getMano().get(i)
-				: (i == 0) ? Model.getInstance().getMazzo().getLastDiscard()
-						: Model.getInstance().getMazzo().getCardToPlay();
+		Carta card = (playerIndex != -1) ? HomeController.getInstance().getPlayers().get(playerIndex).getMano().get(i)
+				: (i == 0) ? HomeController.getInstance().getMazzo().getLastDiscard()
+						: HomeController.getInstance().getMazzo().getCardToPlay();
 		if (card == null)
 			mano[i].setVisible(false);
 		else {
