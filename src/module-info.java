@@ -5,9 +5,8 @@ module JTrashFX {
 	requires javafx.base;
 	requires javafx.graphics;
 	requires java.desktop;
-
+	
 	exports application.controller;
-	exports application.model;
 
 	opens application.model.mazzo to com.google.gson;
 	opens application.model.player to com.google.gson;

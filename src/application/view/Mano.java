@@ -7,30 +7,15 @@ import java.util.stream.Stream;
 
 import application.controller.HomeController;
 import application.model.mazzo.Carta;
-import application.model.mazzo.Mazzo;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-/**
- * This class is the collector of imageView of cards on the playing table
- * 
- * @author Luigi Pennisi
- *
- */
 @SuppressWarnings("deprecation")
 public class Mano implements Observer {
 
-	/**
-	 * this property indicate to which player belongs the hand or if it equals to -1
-	 * indicates that it's the representation of the center of the table (discard
-	 * pile, cardToPlay)
-	 */
 	private int playerIndex;
-	/** lenght of mano */
 	private int size;
-	/** array of ImageView who represent cards */
 	private ImageView[] mano;
-	/** the relative path of the image of an hidden card */
 	private static final String HiddenPath = "/cards/card back/cardBackRed.png";
 
 	/**
@@ -42,7 +27,7 @@ public class Mano implements Observer {
 	 */
 	public static final String getCardPath(Carta card) {
 		try {
-			if (card.isHidden())
+			if (card.getHiddenStatus())
 				return HiddenPath;
 			String seme = card.getSeme().toEnglishString();
 			String valore = card.getValore().toCardValue();
@@ -84,12 +69,12 @@ public class Mano implements Observer {
 	 * This method refresh the view of a specific card by the index
 	 * 
 	 * @param i is the index of the card to refresh if are card of hands else it's
-	 *          needed to understand if refresh the cardToPlay(i=1) or the
-	 *          discardPile(i=0)
+	 *          needed to understand if refresh the cardToPlay or the discardPile
 	 */
 	public void refreshCard(int i) {
 		Carta card = (playerIndex != -1) ? HomeController.getInstance().getPlayers().get(playerIndex).getMano().get(i)
-				: (i == 0) ? Mazzo.getInstance().getLastDiscard() : Mazzo.getInstance().getCardToPlay();
+				: (i == 0) ? HomeController.getInstance().getMazzo().getLastDiscard()
+						: HomeController.getInstance().getMazzo().getCardToPlay();
 		if (card == null)
 			mano[i].setVisible(false);
 		else {
@@ -108,6 +93,15 @@ public class Mano implements Observer {
 	}
 
 	/**
+	 * setters of mano
+	 * 
+	 * @param mano ImageView[]
+	 */
+	private void setMano(ImageView[] mano) {
+		this.mano = mano;
+	}
+
+	/**
 	 * This methods remove the clickable effect and onMouseEvent from each card
 	 */
 	public void removeClickableEffects() {
@@ -116,12 +110,9 @@ public class Mano implements Observer {
 			card.setEffect(null);
 		}
 	}
-
+	
 	/**
-	 * convert the object in stream of ImageView with the elements of the field
-	 * "mano"
-	 * 
-	 * @return the Stream of the array of ImageView "mano"
+	 * convert the object in stream of ImageView with the elements of the field "mano"
 	 */
 	public Stream<ImageView> toStream() {
 		return Arrays.stream(mano);

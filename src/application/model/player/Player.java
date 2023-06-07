@@ -7,7 +7,7 @@ import application.model.mazzo.Carta;
  *
  * @author Luigi Pennisi
  */
-public abstract class Player {
+public abstract class Player implements playable {
 
 	/** Nick of the player */
 	private String name;
@@ -39,7 +39,6 @@ public abstract class Player {
 
 	/**
 	 * Getter of the mano
-	 * 
 	 * @return the mano
 	 */
 	public Mano getMano() {
@@ -85,9 +84,9 @@ public abstract class Player {
 	 *
 	 * @return true if he trash or false if he didn't
 	 */
-	private boolean hasTrash() {
+	private boolean checkTrash() {
 		for (Carta c : mano) {
-			if (c.isHidden())
+			if (c.getHiddenStatus())
 				return false;
 		}
 		cardNumber--;
@@ -96,7 +95,7 @@ public abstract class Player {
 
 	/** setter of the Trash Status calling checkTrash() */
 	public void setTrashStatus() {
-		trashStatus = hasTrash();
+		trashStatus = checkTrash();
 	}
 
 	/**
@@ -116,10 +115,9 @@ public abstract class Player {
 	public int getCardNumber() {
 		return cardNumber;
 	}
-
+	
 	/**
 	 * Setter of the card number
-	 * 
 	 * @param i the value to set on card number
 	 */
 	public void setCardNumber(int i) {
@@ -131,31 +129,47 @@ public abstract class Player {
 	 *
 	 * @return true if he won, false he did't
 	 */
-	public boolean hasWin() {
+	public boolean checkWin() {
 		if (cardNumber == 0)
 			return true;
 		return false;
 	}
-
+	
 	/**
 	 * This method checks if the card is playable
-	 * 
 	 * @param card Is the card to check
-	 * @return true when the card is bigger than the player remaining cards number
-	 *         but not a jolly or king
+	 * @return true when the card is bigger than the player remaining cards number but not a jolly or king
 	 */
 	public boolean cardIsOut(Carta card) {
-		return (getCardNumber() - 1 < card.getV() && card.getV() < 12); // The case where he draws a card but doesn't
-																		// have the position to place it
+		return (getCardNumber() - 1 < card.getV() && card.getV() < 12); // The case where he draws a card but doesn't have the position to place it
 	}
-
+	
 	/**
 	 * This method checks if the card is playable
-	 * 
+	 * @param card Is the card to check
+	 * @return true when the card is Hidden
+	 */
+	public boolean cardIsHidden(Carta card) {
+		return getCardFromHand(card.getV()).getHiddenStatus();
+	}
+	
+	/**
+	 * This method checks if the card is playable
 	 * @param index Is the index of the card to check
 	 * @return true when the card is Hidden
 	 */
 	public boolean cardIsHidden(int index) {
-		return getCardFromHand(index).isHidden();
+		return getCardFromHand(index).getHiddenStatus();
 	}
+	
+	/**
+	 * This method checks if the card is playable
+	 * @param card Is the card to check
+	 * @return true when the card is a jolly or king
+	 */
+	public boolean cardIsJolly(Carta card) {
+		return !(card.getV() < 12);
+	}
+
+	
 }

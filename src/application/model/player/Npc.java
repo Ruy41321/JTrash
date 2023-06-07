@@ -1,18 +1,16 @@
 package application.model.player;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import application.model.mazzo.Carta;
-import application.model.mazzo.Mazzo;
 
 /** Class which represent the Npc players */
 public class Npc extends Player {
 	/** Random generator */
 	private static Random rand = new Random();
 	/** Field used to set a different name for every npc */
-	private static ArrayList<Name> names = new ArrayList<Name>(List.of(Name.values()));
+	private static ArrayList<Integer> namesValue = new ArrayList<>();
 
 	/**
 	 * Generate recursively a random name from the enum Name class excluding the
@@ -22,19 +20,13 @@ public class Npc extends Player {
 	 * @return an Random Name
 	 */
 	private static String randName(String user) {
-		int index = rand.nextInt(names.size());
-		String name = names.get(index).toString();
-		names.remove(index);
-		// if the name generated equals to the user's name it generate another name
-		return (name.equalsIgnoreCase(user)) ? randName(user) : name;
-	}
-
-	/**
-	 * this method reset the random name generator setting again all the names in
-	 * the array list
-	 */
-	public static void resetRandomNameGenerator() {
-		names = new ArrayList<Name>(List.of(Name.values()));
+		int index = rand.nextInt(Name.values().length);
+		if (!namesValue.contains(index) && !Name.values()[index].name().equals(user)) {
+			// if it's different from the user and the previous ones
+			namesValue.add(index);
+			return Name.values()[index].name();
+		}
+		return randName(user);
 	}
 
 	/**
@@ -46,6 +38,10 @@ public class Npc extends Player {
 	public Npc(String user) {
 		super(randName(user));
 	}
+	
+	public static void resetRandomNameGenerator() {
+		namesValue = new ArrayList<>();
+	}
 
 	/**
 	 * Method by which all the Npc play their turns
@@ -54,24 +50,41 @@ public class Npc extends Player {
 	 * their card in that position is still hidden. Else if they will draw a king or
 	 * jolly a random generator will choose an hidden position to place it
 	 *
+	 * @param card The card just draw
+	 * @return card The card got from the hand after the play or Null if the card
+	 *         cannot be place
 	 */
-	public void play() {
-		int pos;
-		Carta cardToPlay = Mazzo.getInstance().getCardToPlay();
-		try {
-			pos = cardToPlay.getV();
-			if (pos > 11)
-				throw new IndexOutOfBoundsException();
-		} catch (IndexOutOfBoundsException e) {
-			// If there is this Exception means the drawn card was a King or Jolly
-			do {
-				pos = rand.nextInt(getCardNumber()); // Picking a random number to choose with which card
-														// switch
-			} while (!getCardFromHand(pos).isHidden()); // repeating the random picking until it
-														// choose an hidden card
-		}
-		// switch in the model and in the view with the observer Observable
-		Mazzo.getInstance().setCardToPlay(changeCard(cardToPlay, pos));
-	}
+	@Override
+	public Carta play(Carta card) {
+		System.out.println("\nHai un " + card.toString()); // Showing the draw card
+		if (getCardNumber() - 1 < card.getV() && card.getV() < 12)
+			// The case where he draws a card but doesn't have the position to place it
+			return null;
+		if (card.getV() < 10) {
+			// The case where it's not a figure
+			if (getCardFromHand(card.getV()).getHiddenStatus()) {
+				// The case where that position is still hidden
+				card = changeCard(card, card.getV()).clone();
+			} else
+				// The case where the position is already shown
+				return null;
 
+		} else {
+			// The case where it's a figure
+			if (card.getV() < 12)
+				// The case where it's a jack or queen
+				return null;
+			else {
+				// The case where it's a king or queen
+				int pos;
+				do {
+					pos = rand.nextInt(getCardNumber()); // Picking a random number to choose with which card switch the
+															// drawn one
+				} while (!getCardFromHand(pos).getHiddenStatus()); // repeating the random picking until it choose an hidden card
+				card = changeCard(card, pos).clone();
+			}
+		}
+		setTrashStatus();
+		return card;
+	}
 }
