@@ -1,7 +1,5 @@
 package application.model.mazzo;
 
-
-
 /**
  * The Carta class is the card representation of the French gaming cards
  *
@@ -45,11 +43,11 @@ public class Carta implements Cloneable {
 	public Seme getSeme() {
 		return s;
 	}
-	
+
 	/**
 	 * Getter of the value
 	 *
-	 * @return the value 
+	 * @return the value
 	 */
 	public Valore getValore() {
 		return v;
@@ -66,16 +64,25 @@ public class Carta implements Cloneable {
 	 *
 	 * @return true if Hidden
 	 */
-	public boolean getHiddenStatus() {
+	public boolean isHidden() {
 		return hiddenStatus;
 	}
 
 	/** Method who change the Hidden status of the card in the other one */
-	public void changeStatus() {
+	public void changeHiddenStatus() {
 		if (hiddenStatus)
 			hiddenStatus = false;
 		else
 			hiddenStatus = true;
+	}
+
+	/**
+	 * This method checks if the card is playable
+	 * 
+	 * @return true when the card is a jolly or king
+	 */
+	public boolean IsJolly() {
+		return (getV() > 11);
 	}
 
 	@Override
