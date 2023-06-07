@@ -21,8 +21,18 @@ public class Mazzo extends Observable {
 	/** Pointer to handle the deck */
 	private int pos = 0;
 
+	/**
+	 * Property which represent the instance of this object (no SingleTon)
+	 */
 	public static Mazzo instance;
 
+	/**
+	 * getter of the instance, the instance will not be created if null, to work the
+	 * deck has to be initialize trough the classic constructor. This method is just
+	 * a simple getter
+	 * 
+	 * @return the static instance of Mazzo
+	 */
 	public static Mazzo getInstance() {
 		try {
 			if (instance == null)
@@ -78,11 +88,12 @@ public class Mazzo extends Observable {
 	 * Method used to do some development checks, it stamps the entire deck stamping
 	 * every single card
 	 */
+	@Deprecated
 	public void stamp() {
 		for (Carta carta : mazzo) {
-			carta.changeStatus();
+			carta.changeHiddenStatus();
 			System.out.println(carta.toString());
-			carta.changeStatus();
+			carta.changeHiddenStatus();
 			System.out.println();
 		}
 	}
@@ -92,9 +103,10 @@ public class Mazzo extends Observable {
 	 * the players get the card for their starting hand and set the TrashStatus on
 	 * false
 	 *
+	 * @param players is the array of player to which distribute cards
 	 */
 	public void distributeCards(ArrayList<Player> players) {
-		mix(); // Mix the deck
+		mix(mazzo); // Mix the deck
 		players.forEach(pl -> {
 			pl.setMano(getMano(pl.getCardNumber()));
 			pl.setTrashStatus();
@@ -137,8 +149,8 @@ public class Mazzo extends Observable {
 	}
 
 	/**
-	 * Method used to mix the deck 5 times, clear the discard pile array, reset the
-	 * pointer and set the main
+	 * Method used to mix an arrayList of cards 5 times, reset the pointer, set this
+	 * arrayList as the main deck, and clear the discard pile
 	 * <p>
 	 * Precisely it generate a Random number who represent the position of the card
 	 * to switch with current card of the iteration, switch them and add the
@@ -146,70 +158,46 @@ public class Mazzo extends Observable {
 	 * method use the check() function to be sure to pick a random number different
 	 * from a previous one to get a more accurate mix
 	 * </p>
+	 * 
+	 * @param deckToMix is the deck to mix and set as main
 	 */
-	public void mix() {
-		int rand;
-		Carta temp;
+	public void mix(ArrayList<Carta> deckToMix) {
 		for (int z = 0; z < 5; z++) {
 			Random r = new Random();
-			int[] indexMixed = new int[mazzo.size()];
+			int[] indexMixed = new int[deckToMix.size()];
 			for (int i = 0; i < indexMixed.length; i++) {
-				indexMixed[i] = mazzo.size() + 1; // Setting all elements to an invalid index
+				indexMixed[i] = deckToMix.size() + 1; // Setting all elements to an invalid index
 			}
-			for (int i = 0; i < mazzo.size(); i++) {
+			for (int i = 0; i < deckToMix.size(); i++) {
+				int rand;
 				do {
-					rand = r.nextInt(mazzo.size());
+					rand = r.nextInt(deckToMix.size());
 				} while (checkContain(indexMixed, rand));
-				temp = mazzo.get(i);
-				mazzo.set(i, mazzo.get(rand));
+				Carta temp;
+				temp = deckToMix.get(i);
+				deckToMix.set(i, deckToMix.get(rand));
 				mazzo.set(rand, temp);
 				indexMixed[i] = rand;
 			}
 		}
 		pos = 0;
+		hideAll(deckToMix);
+		setMain(deckToMix);
 		scarti.clear();
-		hideAll(mazzo);
-		setMain(mazzo);
 	}
 
 	/**
-	 * Method used only when there isn't a next card to mix the discard pile 5
+	 * Method used only when there isn't a next card: to mix the discard pile 5
 	 * times, set it as main deck, clear the discard pile array and reset the
 	 * pointer
-	 * <p>
-	 * Precisely it generate a Random number who represent the position of the card
-	 * to switch with current card of the iteration, switch them and add the
-	 * position of the card mixed to the array of number of position Mixed. The
-	 * method use the check() function to be sure to pick a random number different
-	 * from a previous one to get a more accurate mix
-	 * </p>
+	 * 
+	 * @param mainHasNext is a boolean to indicate if there is an next card on the
+	 *                    main deck
 	 */
-	public void mixScartiIfNecessary() {
-		if (hasNext())
+	public void useDiscardPile(boolean mainHasNext) {
+		if (mainHasNext)
 			return;
-		for (int z = 0; z < 5; z++) {
-			Random r = new Random();
-			int[] nMixed = new int[scarti.size()];
-			for (int i = 0; i < nMixed.length; i++) {
-				nMixed[i] = scarti.size() + 1;
-			}
-			for (int i = 0; i < scarti.size(); i++) {
-				int rand;
-				do {
-					rand = r.nextInt(scarti.size());
-				} while (checkContain(nMixed, rand));
-				Carta temp;
-				temp = scarti.get(i);
-				scarti.set(i, scarti.get(rand));
-				scarti.set(rand, temp);
-				nMixed[i] = rand;
-			}
-		}
-		pos = 0;
-		hideAll(scarti);
-		setMain(scarti);
-		scarti.clear();
-
+		mix(scarti);
 	}
 
 	/**
@@ -262,7 +250,7 @@ public class Mazzo extends Observable {
 	/**
 	 * getter of cardToPlay
 	 * 
-	 * @return cardToPlay
+	 * @return cardToPlayis the card to play
 	 */
 	public Carta getCardToPlay() {
 		return cardToPlay;
@@ -271,20 +259,25 @@ public class Mazzo extends Observable {
 	/**
 	 * setter of cardToPlay
 	 * 
-	 * @param cardToPlay
+	 * @param cardToPlay is the card to play
 	 */
 	public void setCardToPlay(Carta cardToPlay) {
 		this.cardToPlay = cardToPlay;
 		if (cardToPlay != null)
-			this.cardToPlay.changeStatus();
+			this.cardToPlay.changeHiddenStatus();
 		setChanged();
 		notifyObservers(1);
 	}
 
+	/**
+	 * reset all shown card to hidden
+	 * 
+	 * @param deck is the array of card to hide
+	 */
 	public void hideAll(ArrayList<Carta> deck) {
 		for (Carta c : deck)
 			// if the cards were shown re set'em to hidden
-			if (!c.getHiddenStatus())
-				c.changeStatus();
+			if (!c.isHidden())
+				c.changeHiddenStatus();
 	}
 }

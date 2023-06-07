@@ -67,14 +67,14 @@
                         </DropShadow>
                      </effect></TextField>
                   <Line endX="2.0" endY="391.0" fill="WHITE" layoutX="329.0" layoutY="109.0" startX="2.0" startY="-109.0" stroke="#126834" strokeWidth="5.0" />
-                  <Button layoutX="503.0" layoutY="305.0" mnemonicParsing="false" onAction="#doLogin" styleClass="loginButton" text="Login" />
+                  <Button fx:id="loginButton" defaultButton="true" layoutX="503.0" layoutY="305.0" mnemonicParsing="false" onAction="#doLogin" styleClass="loginButton" text="Login" />
                   <PasswordField fx:id="password" layoutX="569.0" layoutY="238.0" />
                   <Label fx:id="errorMessage" layoutX="444.0" layoutY="278.0" textFill="#ff2222" visible="false">
                      <font>
                         <Font name="Courier New Italic" size="15.0" />
                      </font>
                   </Label>
-                  <Button layoutX="634.0" layoutY="305.0" mnemonicParsing="false" onAction="#doSignup" styleClass="loginButton" text="Registrati" />
+                  <Button fx:id="signupButton" layoutX="634.0" layoutY="305.0" mnemonicParsing="false" onAction="#doSignup" styleClass="loginButton" text="Registrati" />
                   <Label contentDisplay="CENTER" layoutX="31.0" layoutY="31.0" prefHeight="48.0" prefWidth="284.0" text="Benvenuto su JTrash" textAlignment="CENTER" AnchorPane.leftAnchor="31.0" AnchorPane.topAnchor="31.0">
                      <font>
                         <Font name="Impact" size="32.0" />

@@ -3,12 +3,11 @@ package application.controller;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 
-//import application.model.Model;
+import application.model.ClassNotInstancedException;
 import application.model.mazzo.Carta;
 import application.model.mazzo.Mazzo;
 import application.model.player.Npc;
@@ -29,16 +28,18 @@ import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Duration;
 
+/**
+ * This class is used to control the view of the Home page
+ * 
+ * @author Luigi Pennisi
+ *
+ */
 public class HomeController implements Initializable {
-	/** Random generator */
-	private static Random rand = new Random();
-
 	@FXML
 	private ImageView avatar;
 
@@ -64,9 +65,6 @@ public class HomeController implements Initializable {
 	private Label lvlSucc;
 
 	@FXML
-	private HBox footer;
-
-	@FXML
 	private CheckBox uno;
 
 	@FXML
@@ -74,6 +72,11 @@ public class HomeController implements Initializable {
 
 	@FXML
 	private CheckBox tre;
+
+	/**
+	 * used to manage the selection of number of npc
+	 */
+	private CheckBox selection;
 
 	@FXML
 	private VBox npcChooser;
@@ -96,12 +99,11 @@ public class HomeController implements Initializable {
 	@FXML
 	private Button discardButton;
 
-	// cards
 	@FXML
 	private VBox drawnCardContainer;
 
 	@FXML
-	private ImageView drawnCard;
+	private ImageView cardToPlayView;
 
 	@FXML
 	private ImageView mazzoView;
@@ -124,6 +126,7 @@ public class HomeController implements Initializable {
 	@FXML
 	private Label npc3_name;
 
+	// single cards
 	@FXML
 	private ImageView user1;
 
@@ -246,36 +249,99 @@ public class HomeController implements Initializable {
 
 	private int currRound = 1;
 
+	/**
+	 * used to understand if someone has already trashed and not print the same
+	 * message in the same turn
+	 */
 	private boolean trashFlag;
 
-	private CheckBox selection;
-
+	/**
+	 * used to save the effect of a card that has to be clicked it will be
+	 * initialized with the effect that the imageView of deck already has in the
+	 * initialize method
+	 */
 	private Effect clickableEffect;
 
+	/**
+	 * property used to manage better the cards of user
+	 */
 	private Mano userMano;
 
+	/**
+	 * property used to manage better the cards of npc
+	 */
 	private Mano npc1Mano;
 
+	/**
+	 * property used to manage better the cards of npc
+	 */
 	private Mano npc2Mano;
 
+	/**
+	 * property used to manage better the cards of npc
+	 */
 	private Mano npc3Mano;
 
+	/**
+	 * property used to manage better the card on the center of the table ( deck,
+	 * discard pile, cardToPlay)
+	 */
 	private Mano centerTable;
 
+	/**
+	 * property that contain the user chose regards the number of cards to play with
+	 */
+	private Integer numOfCards;
+
+	/**
+	 * property used to manage better the players turn knowing anywhere in the code
+	 * the current player who's playing
+	 */
 	private Player currPlayer;
 
+	/**
+	 * This instance represent the deck with which will be played the game
+	 */
 	private Mazzo mazzo;
 
+	/**
+	 * This list contains the instances of the players that will play
+	 */
 	private ArrayList<Player> players;
 
+	/**
+	 * This instance represent the user logged in which is singleton
+	 */
 	private User user = User.getInstance();
-	
+
+	/**
+	 * Property which represent the instance of this object (no SingleTon)
+	 */
 	public static HomeController instance;
-	
+
+	/**
+	 * getter of the instance, the instance will not be created if null, to work the
+	 * HomeController has to be initialize trough the classic method. This method is
+	 * just a simple getter
+	 * 
+	 * @return the static instance of HomeController
+	 */
 	public static HomeController getInstance() {
+		try {
+			if (instance == null)
+				throw new ClassNotInstancedException(
+						"There is no current instance of HomeController, to get an instance you have to go trough the login");
+		} catch (ClassNotInstancedException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 		return instance;
 	}
-	
+
+	/**
+	 * This constructor is used to initialize the instance property to make the
+	 * instance callable from other classes
+	 */
 	public HomeController() {
 		instance = this;
 	}
@@ -291,26 +357,45 @@ public class HomeController implements Initializable {
 		gameField.setVisible(false);
 		npcChooser.setVisible(true);
 
-		setClickableEffect(user2.getEffect());
-		user2.setEffect(null);
+		setClickableEffect(mazzoView.getEffect());
+		mazzoView.setEffect(null);
 
-		// Grouping the numerous Image of the cards on the field in arrays of Image who
-		// indicates the Hands of the player
+		// Grouping the numerous Image of the cards on the field in Objects of type Mano
+		// that
+		// indicates the Hand of the player or the center of the table
 		userMano = new Mano(0, user1, user2, user3, user4, user5, user6, user7, user8, user9, user10);
 		npc1Mano = new Mano(1, npc1_1, npc1_2, npc1_3, npc1_4, npc1_5, npc1_6, npc1_7, npc1_8, npc1_9, npc1_10);
 		npc2Mano = new Mano(2, npc2_1, npc2_2, npc2_3, npc2_4, npc2_5, npc2_6, npc2_7, npc2_8, npc2_9, npc2_10);
 		npc3Mano = new Mano(3, npc3_1, npc3_2, npc3_3, npc3_4, npc3_5, npc3_6, npc3_7, npc3_8, npc3_9, npc3_10);
-		centerTable = new Mano(-1, scarti, drawnCard);
+		centerTable = new Mano(-1, scarti, cardToPlayView);
 	}
-	
+
+	/**
+	 * This method is used to reset the game properties to be ready for a next one
+	 */
 	public void resetGame() {
-		user.endGame(user.checkWin());
-		user.setCardNumber(10);
+		currPlayer = null;
+		user.endGame(user.hasWin());
 		Npc.resetRandomNameGenerator();
+	}
+
+	// **********************sounds methods************************
+
+	/**
+	 * This method is called when clicking on a button, it reproduce the click sound
+	 */
+	public void clickSound() {
+		AudioManager.getInstance().play(AudioManager.clickSound);
 	}
 
 	// **********************convenience methods************************
 
+	/**
+	 * This method set the property player which contain the instance of the player
+	 * playing the session
+	 * 
+	 * @param numOfNpc the number of npc choosen
+	 */
 	public void setPlayers(int numOfNpc) {
 		this.players = new ArrayList<Player>(numOfNpc + 1);// Creating an array of player who contains the Player's
 															// instances of
@@ -320,36 +405,46 @@ public class HomeController implements Initializable {
 			players.add(new Npc(players.get(0).getName())); // Setting the following fields for the Npc
 	}
 
+	/**
+	 * This method set the deck used to play the session
+	 * 
+	 * @param numOfNpc is the number of npc choose to play, needed to know how big
+	 *                 construct the deck
+	 */
 	public void setMazzo(int numOfNpc) {
 		mazzo = (numOfNpc == 1) ? new Mazzo() : new Mazzo(2);// Generate a deck of 54 cards if true, else of 108 cards
-																// like the merge of 2 standard decks
-	}
-	
-	public Mazzo getMazzo() {
-		return mazzo;
 	}
 
+	/**
+	 * getter of players
+	 * 
+	 * @return the arrayList of players
+	 */
 	public ArrayList<Player> getPlayers() {
 		return players;
 	}
 
 	/**
 	 * This method returns the number of the card by his ImageView's Id
+	 * <p>
+	 * e.g -> Card's Id: "user1", n: 4 -> returns the 5' char that is "1" as Integer
+	 * </p>
 	 * 
 	 * @param card Is the card from which return the position
 	 * @param n    Is the number of chars in the ID before the number
 	 * @return the integer that represent the position of the card in the hand
 	 */
-	private int getCardPosition(ImageView card, int n) {
+	private int getCardImageViewPosition(ImageView card, int n) {
 		return Integer.parseInt(card.getId().substring(n)) - 1;
 	}
 
 	/**
 	 * This method sets the clickable Effect property
-	 * 
-	 * <h1>Property Description:</h1> This variable of type Effect contain the
-	 * effect that must have a clickable card to inform the user that it's
+	 * <p>
+	 * <strong>Property Description:</strong> This variable of type Effect contain
+	 * the effect that must have a clickable card to inform the user that it's
 	 * clickable.
+	 * </p>
 	 * 
 	 * @param clickableEffect is the Effect with which sets the property
 	 */
@@ -417,12 +512,13 @@ public class HomeController implements Initializable {
 
 	/**
 	 * This method returns the ImageView of the player card on the position got as
-	 * parameter
+	 * parameter. This is used to understand to which card substitute the card to
+	 * play
 	 * 
 	 * @param position The position of the card to return
 	 * @return the ImageView of the card on the specified position
 	 */
-	private ImageView getCardViewByPosition(String position) {
+	private ImageView getUserCardViewByPosition(String position) {
 		return switch (position) {
 		case "A" -> user1;
 		case "1" -> user1;
@@ -448,7 +544,7 @@ public class HomeController implements Initializable {
 	 * @param isClickable  Is a boolean to know if apply or delete the effect
 	 * @param onMouseClick is the EventHandler to set as onMouseClick Action
 	 */
-	private void setCardClickable(Node JObj, boolean isClickable, EventHandler<MouseEvent> onMouseClick) {
+	private void setCardOnMouseClickProperty(Node JObj, boolean isClickable, EventHandler<MouseEvent> onMouseClick) {
 		if (isClickable) {
 			JObj.setEffect(clickableEffect);
 			JObj.setOnMouseClicked(onMouseClick);
@@ -462,15 +558,16 @@ public class HomeController implements Initializable {
 	 * This method apply the clickableEffect on all cards that are still Hidden
 	 */
 	private void setAllHiddenCardsClickable() {
-		userMano.toStream().filter(cardImage -> {
-			return user.cardIsHidden(getCardPosition(cardImage, 4));
+		userMano.toStream().limit(numOfCards).filter(cardImage -> {
+			return user.cardIsHidden(getCardImageViewPosition(cardImage, 4));
 		}).forEach(cardImage -> {
-			setCardClickable(cardImage, true, this::switchCard);
+			setCardOnMouseClickProperty(cardImage, true, this::switchCard);
 		});
 	}
-	
+
 	/**
 	 * This method return the next player available in anti hour sense
+	 * 
 	 * @return the next player respect the current player
 	 */
 	public Player getFollowingPlayer() {
@@ -487,8 +584,8 @@ public class HomeController implements Initializable {
 	 * who has already trashed it pass to the next round
 	 */
 	private void passToNextTurn() {
-		if (getFollowingPlayer().getTrashStatus()) // if it's his turn and has trashed all
-																					// the other played the last turn
+		if (getFollowingPlayer().getTrashStatus()) // if it's his turn and has trashed means that all
+													// the other players played the last turn
 		{
 			nextRound();
 			return;
@@ -503,7 +600,10 @@ public class HomeController implements Initializable {
 			drawButton.setDisable(false);
 		} : /* else */ event -> {
 			showCardToPlay(event2 -> {
-				npcPlay();
+				try {
+					npcPlay();
+				} catch (NullPointerException e) {
+				} // case when the user leave while the npc turn is going
 			});
 		};
 		fadeEffect("E' il turno di: " + currPlayer.getName(), Duration.seconds(1), 0, 1, true, actionAfterShowName);
@@ -551,11 +651,11 @@ public class HomeController implements Initializable {
 
 		avatar.setImage(new Image("file:" + user.getAvatar()));
 		username.setText(user.getName());
-		totali.setText("Partite Totali: " + user.getpTot());
+		totali.setText("Partite Totali: " + user.getPartiteTot());
 		vinte.setText("Vinte: " + user.getVinte());
 		perse.setText("Perse: " + user.getPerse());
 		lvlAtt.setText("" + lvlAttuale);
-		lvlSucc.setText("" + lvlAttuale + 1);
+		lvlSucc.setText("" + (lvlAttuale + 1));
 		lvlBar.setProgress(expMancante);
 	}
 
@@ -564,6 +664,7 @@ public class HomeController implements Initializable {
 	 * image to set as avatar. Only png and jpeg images are allowed
 	 */
 	public void changeAvatar() {
+		AudioManager.getInstance().play(AudioManager.clickSound);
 		FileChooser fc = new FileChooser();
 		fc.getExtensionFilters().add(new ExtensionFilter("Immagini", "*.png", "*.jpeg"));
 		File f = fc.showOpenDialog(null);
@@ -587,6 +688,7 @@ public class HomeController implements Initializable {
 	 * This method terminates the execution of the application saving first
 	 */
 	public void chiudiTutto() {
+		AudioManager.getInstance().play(AudioManager.clickSound);
 		user.save();
 		System.exit(0);
 	}
@@ -596,9 +698,10 @@ public class HomeController implements Initializable {
 	 * resetting the model first
 	 */
 	public void disconnect() {
+		AudioManager.getInstance().play(AudioManager.clickSound);
 		user.save();
 		Npc.resetRandomNameGenerator();
-		JTrash.changeScene("/application/view/Login.fxml", false, false);
+		JTrash.changeStage("/application/view/Login.fxml", false, false);
 	}
 
 	/**
@@ -606,9 +709,15 @@ public class HomeController implements Initializable {
 	 * resetting the model first
 	 */
 	public void deleteProfile() {
-		user.delete();
-		Npc.resetRandomNameGenerator();
-		JTrash.changeScene("/application/view/Login.fxml", false, false);
+		AudioManager.getInstance().play(AudioManager.clickSound);
+		int choose = JOptionPane.showConfirmDialog(null, "Vuoi davvero cancellare il tuo account?",
+				"Cancellazione Account", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+		if (choose == JOptionPane.OK_OPTION) {
+			user.delete();
+			Npc.resetRandomNameGenerator();
+			JTrash.changeStage("/application/view/Login.fxml", false, false);
+		}
 	}
 
 	// ********************bottom bar actions************************
@@ -618,12 +727,13 @@ public class HomeController implements Initializable {
 	 * his statistics and switch back to the npc selector view.
 	 */
 	public void leaveGame() {
+		AudioManager.getInstance().play(AudioManager.clickSound);
 		int choose = JOptionPane.showConfirmDialog(null, "Stai per abbandonare la partita,\ndesideri continuare?",
 				"Abbandona", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
 		if (choose == JOptionPane.OK_OPTION) {
 			resetGame();
-			JTrash.changeScene("/application/view/Home.fxml", true, true);
+			JTrash.changeStage("/application/view/Home.fxml", true, true);
 		}
 	}
 
@@ -634,17 +744,23 @@ public class HomeController implements Initializable {
 	 * is being called
 	 */
 	public void sayTrash() {
+		AudioManager.getInstance().play(AudioManager.trash);
 		trashButton.setDisable(true);
 		discard();
-		fadeEffect(currPlayer.getName() + " dice Trash !!!", Duration.seconds(2), 0, 1, true, event -> {
-			if (currPlayer.checkWin()) {
+		fadeEffect(currPlayer.getName() + " dice Trash !!!", Duration.seconds(1), 0, 1, true, event -> {
+			if (currPlayer.hasWin()) {
+				AudioManager.getInstance().play(AudioManager.claps);
 				fadeEffect(currPlayer.getName().toUpperCase() + " HAI VINTO !!!", Duration.seconds(2), 0, 1, false,
 						event3 -> {
-							JOptionPane.showMessageDialog(null, "La partita è finita, grazie per aver giocato",
-									"Partita conclusa", JOptionPane.INFORMATION_MESSAGE);
+							AudioManager.getInstance().play(AudioManager.continueOrNot);
 							resetGame();
-							JTrash.changeScene("/application/view/Home.fxml", true, true);
-
+							int choose = JOptionPane.showConfirmDialog(null, "Vuoi Rigiocare?", "Continuare?",
+									JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null);
+							AudioManager.getInstance().stopLast();
+							if (choose == JOptionPane.OK_OPTION)
+								startsPlay();
+							else
+								JTrash.changeStage("/application/view/Home.fxml", true, true);
 						});
 			} else if (!trashFlag) {
 				trashFlag = true;
@@ -687,6 +803,7 @@ public class HomeController implements Initializable {
 	 * @param e Is the Node who invoked the event/method
 	 */
 	public void npcSelection(ActionEvent e) {
+		AudioManager.getInstance().play(AudioManager.clickSound);
 		due.setSelected(false);
 		uno.setSelected(false);
 		tre.setSelected(false);
@@ -697,31 +814,41 @@ public class HomeController implements Initializable {
 
 	/**
 	 * This method starts the game: using the selection property it works only if a
-	 * number of npc is selected. Then depending on the number of npc choose it sets
-	 * visible the hands of the npc Then initialize the Model with this number Then
-	 * says to the Model to distribute the cards Then witch the view from the npc
-	 * selection to the game table In the end able the player to play
+	 * number of npc is selected. Then ask the user the initial number of cards.
+	 * Then depending on the number of npc choose it sets visible the hands of the
+	 * npc Then initialize the Model with this number Then says to the Model to
+	 * distribute the cards Then witch the view from the npc selection to the game
+	 * table In the end able the player to play
 	 */
 	@SuppressWarnings("deprecation")
 	public void startsPlay() {
-		if (selection == null)
+		if (selection == null) {
+			AudioManager.getInstance().play(AudioManager.nullClickSound);
 			return;
+		}
+		AudioManager.getInstance().play(AudioManager.clickSound);
+		numOfCards = (Integer) JOptionPane.showInputDialog(null, "Inserisci il numero di carte iniziali",
+				"Selezione del numero di carte", JOptionPane.QUESTION_MESSAGE, null,
+				new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, 10);
+		if (numOfCards == null)
+			return;
+
 		npc2_hand.setVisible(false);
 		npc3_hand.setVisible(false);
 		switch (selection.getId()) {
 		case "uno": {
-			setGame(1);
+			setGameProperties(1);
 			break;
 		}
 		case "due": {
-			setGame(2);
+			setGameProperties(2);
 			npc2_name.setText(players.get(2).getName());
 			players.get(2).getMano().addObserver(npc2Mano);
 			npc2_hand.setVisible(true);
 			break;
 		}
 		case "tre": {
-			setGame(3);
+			setGameProperties(3);
 			npc2_name.setText(players.get(2).getName());
 			players.get(2).getMano().addObserver(npc2Mano);
 			npc3_name.setText(players.get(3).getName());
@@ -733,6 +860,10 @@ public class HomeController implements Initializable {
 		default:
 			break;
 		}
+		players.forEach(pl -> {
+			pl.setCardNumber((Integer) numOfCards);
+		});
+
 		npc1_name.setText(players.get(1).getName());
 		players.get(0).getMano().addObserver(userMano);
 		players.get(1).getMano().addObserver(npc1Mano);
@@ -755,7 +886,7 @@ public class HomeController implements Initializable {
 	 * 
 	 * @param n is the number of npc
 	 */
-	private void setGame(int n) {
+	private void setGameProperties(int n) {
 		setPlayers(n);
 		setMazzo(n);
 	}
@@ -767,13 +898,14 @@ public class HomeController implements Initializable {
 	 * @param afterFading is the Event to run on the finish of the fade effect
 	 */
 	public void showCardToPlay(EventHandler<ActionEvent> afterFading) {
-		mazzo.mixScartiIfNecessary();
+		AudioManager.getInstance().play(AudioManager.cardSwipeSound);
+		mazzo.useDiscardPile(mazzo.hasNext());
 
 		if (mazzo.getCardToPlay() == null)
 			mazzo.setCardToPlay(mazzo.next()); // draws the cards if not present
 
-		drawnCard.setOpacity(0);
-		fadeEffect(drawnCard, Duration.seconds(1), 0, 1, false, afterFading);
+		cardToPlayView.setOpacity(0);
+		fadeEffect(cardToPlayView, Duration.seconds(1), 0, 1, false, afterFading);
 	}
 
 	/**
@@ -782,6 +914,7 @@ public class HomeController implements Initializable {
 	 * to choose the card to switch
 	 */
 	public void userPlay() {
+		drawButton.setDisable(true);
 		showCardToPlay(null);
 		Carta cardToPlay = mazzo.getCardToPlay();
 		if (user.cardIsOut(cardToPlay)) {
@@ -789,18 +922,18 @@ public class HomeController implements Initializable {
 			// number
 			discardButton.setDisable(false);
 		} else {
-			if (user.cardIsJolly(cardToPlay)) {
+			if (cardToPlay.IsJolly()) {
 				// case when the card is King or Jolly
 				setAllHiddenCardsClickable();
-			} else if (!user.cardIsHidden(cardToPlay)) {
+			} else if (!user.cardIsHidden(cardToPlay.getV())) {
 				// case when the card to replace is already replaced
 				discardButton.setDisable(false);
 			} else {
 				// case when the card is a number and the card to replace is still hidden
-				setCardClickable(getCardViewByPosition(cardToPlay.getValore().toCardValue()), true, this::switchCard);
+				setCardOnMouseClickProperty(getUserCardViewByPosition(cardToPlay.getValore().toCardValue()), true,
+						this::switchCard);
 			}
 		}
-		drawButton.setDisable(true);
 	}
 
 	/**
@@ -814,7 +947,7 @@ public class HomeController implements Initializable {
 		ImageView card = (ImageView) cardClicked.getSource(); // This method is called only by ImageView Nodes
 
 		// switch in the model and in the view with the observer Observable
-		mazzo.setCardToPlay(currPlayer.changeCard(mazzo.getCardToPlay(), getCardPosition(card, 4)));
+		mazzo.setCardToPlay(currPlayer.changeCard(mazzo.getCardToPlay(), getCardImageViewPosition(card, 4)));
 
 		userMano.removeClickableEffects();
 
@@ -835,7 +968,6 @@ public class HomeController implements Initializable {
 	 * it can be switched it invoke the method to switch the cards else it discard
 	 * it and pass the turn
 	 * 
-	 * @param npc Is the current npc playing
 	 */
 	private void npcPlay() {
 		Carta cardToPlay = mazzo.getCardToPlay();
@@ -844,51 +976,28 @@ public class HomeController implements Initializable {
 			discard();
 			passToNextTurn();
 		} else {
-			if (currPlayer.cardIsJolly(cardToPlay)) {
+			if (cardToPlay.IsJolly()) {
 				// case when the card is King or Jolly
-				npcSwitchCard();
-			} else if (!currPlayer.cardIsHidden(cardToPlay)) {
+				((Npc) currPlayer).play();
+			} else if (!currPlayer.cardIsHidden(cardToPlay.getV())) {
 				// case when the card to replace is already replaced
 				discard();
 				passToNextTurn();
 				return;
 			} else {
 				// case when the card is a number and it's still hidden
-				npcSwitchCard();
+				((Npc) currPlayer).play();
 			}
 
 			if (!currPlayer.getTrashStatus()) // it continue to to invoke itSelf method until do trash or discard
 				showCardToPlay(event -> {
-					npcPlay();
+					try {
+						npcPlay();
+					} catch (NullPointerException e) {// case when the user leave while the npc turn is going
+					}
 				});
 			else
 				sayTrash();
 		}
 	}
-
-	/**
-	 * This method switch the current card on the table (to play) with a card in the
-	 * hand of the npc picking it randomly for jolly or king
-	 */
-	private void npcSwitchCard() {
-		ImageView card;
-		Carta cardToPlay = mazzo.getCardToPlay();
-		try {
-			card = getHandImages(currPlayer)[cardToPlay.getV()];
-		} catch (ArrayIndexOutOfBoundsException e) {
-			// If there is this Exception means the drawn card was a King or Jolly
-			int pos;
-			do {
-				pos = rand.nextInt(currPlayer.getCardNumber()); // Picking a random number to choose with which card
-																// switch the
-				// drawn one
-			} while (!currPlayer.getCardFromHand(pos).getHiddenStatus()); // repeating the random picking until it
-																			// choose an hidden card
-			card = getHandImages(currPlayer)[pos];
-		}
-
-		// switch in the model and in the view with the observer Observable
-		mazzo.setCardToPlay(currPlayer.changeCard(cardToPlay, getCardPosition(card, 5)));
-	}
-
 }

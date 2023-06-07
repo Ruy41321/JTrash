@@ -22,17 +22,12 @@ import application.model.mazzo.Carta;
  * @author Luigi Pennisi
  */
 public class User extends Player {
-	/** Text Scanner */
-	private static Scanner in = new Scanner(System.in);
 	/** Nick of the user */
 	@Expose
 	private String nick;
 	/** Encrypted pass of the user */
 	@Expose
 	private String pass;
-	/** Number of game played */
-	@Expose
-	private int pTot;
 	/** Number of game won */
 	@Expose
 	private int vinte;
@@ -45,9 +40,19 @@ public class User extends Player {
 	/** Path of the user's profile image */
 	@Expose
 	private String avatar;
-	
+
+	/**
+	 * Property which represent the instance of this object
+	 */
 	private static User instance;
-	
+
+	/**
+	 * getter of the instance, the instance will not be created if null, to work the
+	 * user has to be initialized through the login method. This method is just a
+	 * simple instance getter
+	 * 
+	 * @return the static instance of User
+	 */
 	public static User getInstance() {
 		try {
 			if (instance == null)
@@ -69,16 +74,14 @@ public class User extends Player {
 	 * @param vinte   Number of games won
 	 * @param perse   Number of games lost
 	 * @param livello Level of the player
-	 * @param pTot    Number of games
 	 * @param avatar  The path for the profile image
 	 */
-	public User(String nick, String pass, int vinte, int perse, float livello, int pTot, String avatar) {
+	public User(String nick, String pass, int vinte, int perse, float livello, String avatar) {
 		super(nick);
 		this.nick = nick;
 		this.pass = pass;
 		this.vinte = vinte;
 		this.perse = perse;
-		this.pTot = pTot;
 		this.livello = livello;
 		this.avatar = avatar;
 		instance = this;
@@ -96,7 +99,6 @@ public class User extends Player {
 		this.pass = u.pass;
 		this.vinte = u.vinte;
 		this.perse = u.perse;
-		this.pTot = u.pTot;
 		this.livello = u.livello;
 		this.avatar = u.avatar;
 		instance = this;
@@ -104,9 +106,9 @@ public class User extends Player {
 
 	@Override
 	public String toString() {
-		return "User:\t".concat(nick).concat("\nLivel:\t").concat(String.valueOf(livello)).concat("\nTotali:\t")
-				.concat(String.valueOf(pTot)).concat("\nVinte:\t").concat(String.valueOf(vinte)).concat("\nPerse:\t")
-				.concat(String.valueOf(perse)).concat("\nAvatar:\t").concat(avatar);
+		return "User:\t".concat(nick).concat("\nLivel:\t").concat(String.valueOf(livello)).concat("\nVinte:\t")
+				.concat(String.valueOf(vinte)).concat("\nPerse:\t").concat(String.valueOf(perse)).concat("\nAvatar:\t")
+				.concat(avatar);
 	}
 
 	/**
@@ -123,16 +125,8 @@ public class User extends Player {
 	 *
 	 * @return the total number of game played
 	 */
-	public int getpTot() {
-		return pTot;
-	}
-
-	/**
-	 * setter which calculate at the moment the number of game played adding the won
-	 * and the lost
-	 */
-	public void updatePTot() {
-		pTot = vinte + perse;
+	public int getPartiteTot() {
+		return vinte + perse;
 	}
 
 	/**
@@ -146,12 +140,12 @@ public class User extends Player {
 
 	/** Increment of won game */
 	public void incrVinte() {
-		vinte += 1;
+		vinte++;
 	}
 
 	/** Increment of lost game */
 	public void incrPerse() {
-		perse += 1;
+		perse++;
 	}
 
 	/**
@@ -208,53 +202,6 @@ public class User extends Player {
 			System.out.println("Il percorso inserito non è un file");
 		return false;
 	}
-	
-	/**
-	 * Method by which the user plays his turn
-	 * <p>
-	 * When he will draw a card from 1 to 10 the system automatically switch it if
-	 * their card in that position is still hidden. Else if he will draw a king or
-	 * jolly he will have the possibility to choose an hidden position to place it
-	 *
-	 * @param card The card just draw
-	 * @return card The card got from the hand after the play or Null if the card
-	 *         cannot be place
-	 */
-	@Override
-	public Carta play(Carta card) {
-		System.out.println("\nHai un " + card.toString()); // Showing the draw card
-		if (cardIsOut(card)) {
-			// The case where he draws a card but doesn't have the position to place it
-			return null;
-		}
-		if (card.getV() < 10) {
-			// The case where it's not a figure
-			if (cardIsHidden(card)) {
-				// The case where that position is still hidden
-				card = changeCard(card, card.getV()).clone();
-			} else
-				// The case where the position is already shown
-				return null;
-
-		} else {
-			// The case where it's a figure
-			if (!cardIsJolly(card))
-				// The case where it's a jack or queen
-				return null;
-			else {
-				// The case where it's a king or queen
-				int pos;
-				do {
-					// The user choose where to place the card until he choose an hidden card
-					System.out.println("Scegli dove posizionare la carta");
-					pos = in.nextInt();
-				} while (!getCardFromHand(pos - 1).getHiddenStatus());
-				card = changeCard(card, pos - 1).clone();
-			}
-		}
-		setTrashStatus();
-		return card;
-	}
 
 	/**
 	 * This method update the player statistics based on the status of the current
@@ -269,7 +216,6 @@ public class User extends Player {
 		} else {
 			incrPerse();
 		}
-		updatePTot();
 		calcLivello();
 		save();
 	}
@@ -344,19 +290,20 @@ public class User extends Player {
 	/**
 	 * This method is used to sign up a new account
 	 *
+	 * @param nick is the user's name choose to sign with
+	 * @param pass is the password choose to protect the account
+	 *
 	 * @return true if works, false if it encounter an error
 	 **/
 	public static boolean signup(String nick, String pass) {
 		try {
 			File file = new File("bin/users/" + nick + ".json");
 			// if the file already exist means the nick is already taken
-
-			System.out.println(file.getAbsolutePath());
 			if (file.exists())
 				System.out.println("Nick non disponibile");
 			else if (file.createNewFile()) { // creating the file
 				// setting to default the Users statistics
-				int perse = 0, vinte = 0, pTot = 0, livello = 1;
+				int perse = 0, vinte = 0, livello = 1;
 				String avatar = "bin/varie/avatar.png";
 
 				// Initializing the Objects to write on files
@@ -364,7 +311,7 @@ public class User extends Player {
 
 				// Writing on Json file with Gson libraries
 				Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-				bw.write(gson.toJson(new User(nick, encrypt(pass), vinte, perse, livello, pTot, avatar)));
+				bw.write(gson.toJson(new User(nick, encrypt(pass), vinte, perse, livello, avatar)));
 
 				// Correctly closing the file
 				bw.flush(); // Cleaning the buffer to ensure that the data has been written
@@ -382,6 +329,9 @@ public class User extends Player {
 
 	/**
 	 * This method is used to permit the user to log in his account
+	 *
+	 * @param nick is the name of the account in which log in
+	 * @param pass is the password to access to the account
 	 *
 	 * @return the User instance if he logged in, Null if it encounter an error
 	 */

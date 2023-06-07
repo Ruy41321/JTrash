@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"JTrashFX","l":"application.controller"},{"m":"JTrashFX","l":"application.model"},{"m":"JTrashFX","l":"application.model.mazzo"},{"m":"JTrashFX","l":"application.model.player"},{"m":"JTrashFX","l":"application.view"}];updateSearchResults();

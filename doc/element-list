@@ -1,0 +1,6 @@
+module:JTrashFX
+application.controller
+application.model
+application.model.mazzo
+application.model.player
+application.view
