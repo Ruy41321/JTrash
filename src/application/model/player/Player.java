@@ -15,8 +15,6 @@ public abstract class Player {
 	private transient Mano mano;
 	/** variable to know how many card the player deserve */
 	private int cardNumber = 10;
-	/** flag used to know if the player has done Trash */
-	private boolean trashStatus;
 
 	/**
 	 * Create a new Player using the name given
@@ -75,7 +73,7 @@ public abstract class Player {
 	public Carta changeCard(Carta newC, int i) {
 		Carta temp = mano.get(i).clone();
 		mano.switchCard(i, newC.clone());
-		setTrashStatus();
+		if(hasTrash()) cardNumber--;
 		return temp;
 	}
 
@@ -85,27 +83,12 @@ public abstract class Player {
 	 *
 	 * @return true if he trash or false if he didn't
 	 */
-	private boolean hasTrash() {
+	public boolean hasTrash() {
 		for (Carta c : mano) {
 			if (c.isHidden())
 				return false;
 		}
-		cardNumber--;
 		return true;
-	}
-
-	/** setter of the Trash Status calling checkTrash() */
-	public void setTrashStatus() {
-		trashStatus = hasTrash();
-	}
-
-	/**
-	 * getter of the Trash Status
-	 *
-	 * @return trashStatus
-	 */
-	public boolean getTrashStatus() {
-		return trashStatus;
 	}
 
 	/**

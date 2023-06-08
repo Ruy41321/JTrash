@@ -88,15 +88,10 @@ public class LoginController implements Initializable {
 	 * 
 	 */
 	public void doLogin() {
-		AudioManager.getInstance().play(AudioManager.clickSound);
-		;
-		if (username.getText().equals("")) {
-			username.setText("giggio");
-			password.setText("ciccio");
-		}
 		if (User.login(username.getText(), password.getText()) != null) {
 			JTrash.changeStage("/application/view/Home.fxml", true, true);
 		} else {
+			AudioManager.getInstance().play(AudioManager.clickSound);
 			setError("Riprovare: Password o Username errati", 0);
 		}
 

@@ -7,14 +7,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.util.Scanner;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 
 import application.model.ClassNotInstancedException;
-import application.model.mazzo.Carta;
 
 /**
  * Class to represent an user (Human Player) who extends player
@@ -76,7 +74,7 @@ public class User extends Player {
 	 * @param livello Level of the player
 	 * @param avatar  The path for the profile image
 	 */
-	public User(String nick, String pass, int vinte, int perse, float livello, String avatar) {
+	private User(String nick, String pass, int vinte, int perse, float livello, String avatar) {
 		super(nick);
 		this.nick = nick;
 		this.pass = pass;
@@ -93,7 +91,7 @@ public class User extends Player {
 	 *
 	 * @param u User got from the gson reader
 	 */
-	public User(User u) {
+	private User(User u) {
 		super(u.nick);
 		this.nick = u.nick;
 		this.pass = u.pass;

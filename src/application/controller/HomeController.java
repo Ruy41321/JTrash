@@ -317,7 +317,7 @@ public class HomeController implements Initializable {
 	/**
 	 * Property which represent the instance of this object (no SingleTon)
 	 */
-	public static HomeController instance;
+	private static HomeController instance;
 
 	/**
 	 * getter of the instance, the instance will not be created if null, to work the
@@ -403,16 +403,6 @@ public class HomeController implements Initializable {
 		players.add(user); // Setting the User in the first field
 		for (int i = 1; i < numOfNpc + 1; i++)
 			players.add(new Npc(players.get(0).getName())); // Setting the following fields for the Npc
-	}
-
-	/**
-	 * This method set the deck used to play the session
-	 * 
-	 * @param numOfNpc is the number of npc choose to play, needed to know how big
-	 *                 construct the deck
-	 */
-	public void setMazzo(int numOfNpc) {
-		mazzo = (numOfNpc == 1) ? new Mazzo() : new Mazzo(2);// Generate a deck of 54 cards if true, else of 108 cards
 	}
 
 	/**
@@ -558,11 +548,14 @@ public class HomeController implements Initializable {
 	 * This method apply the clickableEffect on all cards that are still Hidden
 	 */
 	private void setAllHiddenCardsClickable() {
-		userMano.toStream().limit(numOfCards).filter(cardImage -> {
-			return user.cardIsHidden(getCardImageViewPosition(cardImage, 4));
-		}).forEach(cardImage -> {
-			setCardOnMouseClickProperty(cardImage, true, this::switchCard);
-		});
+		userMano.toStream()
+			.limit(numOfCards)
+			.filter(cardImage -> {
+				return user.cardIsHidden(getCardImageViewPosition(cardImage, 4));
+			})
+			.forEach(cardImage -> {
+					setCardOnMouseClickProperty(cardImage, true, this::switchCard);
+				});
 	}
 
 	/**
@@ -584,9 +577,8 @@ public class HomeController implements Initializable {
 	 * who has already trashed it pass to the next round
 	 */
 	private void passToNextTurn() {
-		if (getFollowingPlayer().getTrashStatus()) // if it's his turn and has trashed means that all
-													// the other players played the last turn
-		{
+		if (getFollowingPlayer().hasTrash()) {
+			// if it's his turn and has trashed the others players played their last turn
 			nextRound();
 			return;
 		}
@@ -888,7 +880,7 @@ public class HomeController implements Initializable {
 	 */
 	private void setGameProperties(int n) {
 		setPlayers(n);
-		setMazzo(n);
+		mazzo = Mazzo.setMazzo(n);
 	}
 
 	/**
@@ -945,15 +937,13 @@ public class HomeController implements Initializable {
 	 */
 	private void switchCard(MouseEvent cardClicked) {
 		ImageView card = (ImageView) cardClicked.getSource(); // This method is called only by ImageView Nodes
-
 		// switch in the model and in the view with the observer Observable
 		mazzo.setCardToPlay(currPlayer.changeCard(mazzo.getCardToPlay(), getCardImageViewPosition(card, 4)));
 
 		userMano.removeClickableEffects();
 
 		// checks if Trash
-		if (user.getTrashStatus()) {
-			// drawButton.setDisable(true);
+		if (user.hasTrash()) {
 			trashButton.setDisable(false);
 			return;
 		}
@@ -989,7 +979,7 @@ public class HomeController implements Initializable {
 				((Npc) currPlayer).play();
 			}
 
-			if (!currPlayer.getTrashStatus()) // it continue to to invoke itSelf method until do trash or discard
+			if (!currPlayer.hasTrash()) // it continue to to invoke itSelf method until do trash or discard
 				showCardToPlay(event -> {
 					try {
 						npcPlay();

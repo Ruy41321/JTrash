@@ -87,7 +87,7 @@ public class Mano extends Observable implements Iterable<Carta> {
 	private class ManoIterator implements Iterator<Carta> {
 
 		/** this is the index to iterate */
-		int pos = 0;
+		private int pos = 0;
 
 		@Override
 		public boolean hasNext() {

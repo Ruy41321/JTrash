@@ -44,13 +44,23 @@ public class Mazzo extends Observable {
 		}
 		return instance;
 	}
+	
+	/**
+	 * This method set the deck used to play the session
+	 * 
+	 * @param numOfNpc is the number of npc choose to play, needed to know how big
+	 *                 construct the deck
+	 */
+	public static Mazzo setMazzo(int numOfNpc) {
+		return (numOfNpc == 1) ? new Mazzo() : new Mazzo(2);// Generate a deck of 54 cards if true, else of 108 cards
+	}
 
 	/**
 	 * Constructor for a deck of 54*n cards
 	 *
 	 * @param n is the multiplier of decks
 	 */
-	public Mazzo(int n) {
+	private Mazzo(int n) {
 		mazzo = new ArrayList<>(108);
 		for (int i = 0; i < n; i++)
 			mazzo.addAll(new Mazzo().mazzo);
@@ -60,7 +70,7 @@ public class Mazzo extends Observable {
 	}
 
 	/** Constructor for a deck of 54 cards */
-	public Mazzo() {
+	private Mazzo() {
 		mazzo = new ArrayList<>(54);
 		for (Valore v : Valore.values()) {
 			for (Seme s : Seme.values()) {
@@ -109,7 +119,6 @@ public class Mazzo extends Observable {
 		mix(mazzo); // Mix the deck
 		players.forEach(pl -> {
 			pl.setMano(getMano(pl.getCardNumber()));
-			pl.setTrashStatus();
 		});
 		discard(next());
 	}
